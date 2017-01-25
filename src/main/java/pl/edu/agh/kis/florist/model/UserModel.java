@@ -1,5 +1,6 @@
 package pl.edu.agh.kis.florist.model;
-import pl.edu.agh.kis.db.tables.pojos.Users;
+
+import pl.edu.agh.kis.florist.db.tables.pojos.Users;
 
 /**
  * Created by yevvye on 16.01.17.

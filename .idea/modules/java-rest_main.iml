@@ -21,6 +21,7 @@
     <orderEntry type="library" name="Gradle: org.jooq:jooq:3.8.6" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.sparkjava:spark-core:2.5.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.mindrot:jbcrypt:0.3m" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.0.13" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-server:9.3.6.v20151106" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-webapp:9.3.6.v20151106" level="project" />

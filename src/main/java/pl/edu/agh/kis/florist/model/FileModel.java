@@ -1,5 +1,6 @@
 package pl.edu.agh.kis.florist.model;
-import pl.edu.agh.kis.db.tables.pojos.FileMetadata;
+
+import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
 
 import java.sql.Timestamp;
 

@@ -5,7 +5,7 @@ import pl.edu.agh.kis.florist.dao.UserDAO;
 import pl.edu.agh.kis.florist.model.UserModel;
 import spark.Request;
 import spark.Response;
-//import org.mindrot.jbcrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Created by yevvye on 16.01.17.

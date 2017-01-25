@@ -1,7 +1,8 @@
 package pl.edu.agh.kis.florist.model;
-import pl.edu.agh.kis.db.tables.pojos.FileMetadata;
-import pl.edu.agh.kis.db.tables.pojos.FolderMetadata;
 
+import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -10,17 +11,17 @@ import java.util.List;
  */
 public class FolderModel extends FolderMetadata implements FolderFileModel{
 
-    private List<FolderMetadata> foldersInFolder;
-    private List<FileMetadata> filesInFolder;
+    private List<FolderModel> foldersInFolder;
+    private List<FileModel> filesInFolder;
 
     public FolderModel(FolderMetadata value) {
         super(value);
     }
 
-    public FolderModel(Integer folderId, String name, String pathLower, String pathDisplay, Integer parentFolderId, String serverCreatedAt, int ownerid, List<FolderMetadata> foldersInFolder) {
-        super(folderId, name, pathLower, pathDisplay, parentFolderId, serverCreatedAt, ownerid);
-        this.foldersInFolder = foldersInFolder;
+    public FolderModel(Integer folderId, String name, String pathLower, String pathDisplay, Integer parentFolderId, Timestamp serverCreatedAt) {
+        super(folderId, name, pathLower, pathDisplay, parentFolderId, serverCreatedAt);
     }
+
 
     /*public List<FolderMetadata> getFolders() {
         return foldersInFolder;

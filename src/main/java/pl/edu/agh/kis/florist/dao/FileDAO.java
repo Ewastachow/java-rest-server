@@ -2,11 +2,11 @@ package pl.edu.agh.kis.florist.dao;
 
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import pl.edu.agh.kis.db.tables.daos.FileMetadataDao;
-import pl.edu.agh.kis.db.tables.daos.FolderMetadataDao;
-import pl.edu.agh.kis.db.tables.pojos.FileMetadata;
-import pl.edu.agh.kis.db.tables.pojos.FolderMetadata;
-import pl.edu.agh.kis.db.tables.records.FolderMetadataRecord;
+import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
+import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
+import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
+import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
+import pl.edu.agh.kis.florist.db.tables.records.FolderMetadataRecord;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import pl.edu.agh.kis.florist.model.*;
 
@@ -14,7 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static pl.edu.agh.kis.db.Tables.*;
+import static pl.edu.agh.kis.florist.db.tables.FileMetadata.FILE_METADATA;
+import static pl.edu.agh.kis.florist.db.tables.FolderMetadata.FOLDER_METADATA;
+
 
 /**
  * Created by yevvye on 16.01.17.
