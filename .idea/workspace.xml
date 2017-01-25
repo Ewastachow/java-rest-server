@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f24bdf37-6b90-430a-a8ef-fa568fc6d8db" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test.db" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.classpath" afterPath="$PROJECT_DIR$/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java-rest.iml" afterPath="$PROJECT_DIR$/java-rest.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.db" afterPath="$PROJECT_DIR$/test.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" afterPath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V4__create_file_metadata_table.sql" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V4__create_file_metadata_table.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java" afterPath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java" />
     </list>
     <ignored path="java-rest.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,11 +43,22 @@
       <file leaf-file-name="FileController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5">
-              <caret line="66" column="71" selection-start-line="66" selection-start-column="71" selection-end-line="66" selection-end-column="71" />
+            <state relative-caret-position="257">
+              <caret line="176" column="60" selection-start-line="176" selection-start-column="60" selection-end-line="176" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#handleDeleteFolder#0;class#FileController#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileModel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="140">
+              <caret line="12" column="5" selection-start-line="9" selection-start-column="71" selection-end-line="12" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -82,7 +89,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="70">
               <caret line="5" column="67" selection-start-line="5" selection-start-column="67" selection-end-line="5" selection-end-column="67" />
-              <folding />
+              <folding>
+                <marker date="1485365604525" expanded="true" signature="0:321" ph="CREATE TABLE... file_metadata" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -599,7 +608,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FolderModel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/UserModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/dao/UserDAO.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
@@ -608,6 +616,7 @@
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/Apppp.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java" />
         <option value="$PROJECT_DIR$/src/main/resources/db/migration/V4__create_file_metadata_table.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" />
       </list>
     </option>
@@ -1516,30 +1525,30 @@
       <option name="presentableId" value="Default" />
       <updated>1485347526081</updated>
       <workItem from="1485347528819" duration="693000" />
-      <workItem from="1485349316098" duration="15562000" />
+      <workItem from="1485349316098" duration="17286000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16255000" />
+    <option name="totallyTimeSpent" value="17979000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="769" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.50453174" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.4954683" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32919255" sideWeight="0.4954683" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32919255" sideWeight="0.49697885" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.49697885" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28700906" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28700906" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1576,7 +1585,7 @@
           <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="19" />
+      <option name="time" value="20" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1601,16 +1610,6 @@
             <element signature="imports" expanded="true" />
             <element signature="e#409#410#0" expanded="true" />
             <element signature="e#437#438#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1856,7 +1855,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="70">
           <caret line="5" column="67" selection-start-line="5" selection-start-column="67" selection-end-line="5" selection-end-column="67" />
-          <folding />
+          <folding>
+            <marker date="1485365604525" expanded="true" signature="0:321" ph="CREATE TABLE... file_metadata" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1876,13 +1877,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5">
-          <caret line="66" column="71" selection-start-line="66" selection-start-column="71" selection-end-line="66" selection-end-column="71" />
+        <state relative-caret-position="140">
+          <caret line="12" column="5" selection-start-line="9" selection-start-column="71" selection-end-line="12" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#handleDeleteFolder#0;class#FileController#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="176" column="60" selection-start-line="176" selection-start-column="60" selection-end-line="176" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

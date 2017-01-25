@@ -12,7 +12,5 @@ public class FileModel extends FileMetadata implements FolderFileModel{
         super(value);
     }
 
-    public FileModel(Integer fileId, String name, String pathLower, String pathDisplay, Integer size, Timestamp serverCreatedAt, Timestamp serverChangedAt, Integer enclosingFolderId) {
-        super(fileId, name, pathLower, pathDisplay, size, serverCreatedAt, serverChangedAt, enclosingFolderId);
-    }
+
 }
