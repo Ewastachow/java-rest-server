@@ -1,5 +1,5 @@
-group 'java-rest-server'
-version '1.0'
+//group 'java-rest-server'
+//version '1.0'
 
 plugins {
     id 'nu.studer.jooq' version '2.0.2'
