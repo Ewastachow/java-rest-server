@@ -23,6 +23,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yevvye on 14.01.2017.
@@ -55,26 +57,16 @@ public class FileController {
     }
 
     public Object handleFolderContent(Request request, Response response) {
-//        try {
-//            String folderPath = request.params("path");
-//            // uzywamy repozytorium, zeby znalezc containedFileId albo containedFolderId
-//            //zwraca obiekt klasy FolderFolderContentsM albo FolderFileContentsM ? a co jak sa oba?
-//            if (!folderPath.startsWith("/")) {
-//                throw new InvalidPathException(folderPath);
-//            }
-//
-//            List<FolderMetadata> folderMetadatas = folderMetadataDao.fetchByPathLower(folderPath);
-//            if (folderMetadatas.size()==0) {
-//                //throw new FolderDoesNotExistException(folderPath); //stworzyc wyjatek
-//            }
-//            FolderMetadata rootFolder = folderMetadatas.get(0); //jesli jest kilka folderow, size>1, blad
-//            Collection<FolderMetadata> folderList = folderMetadataDao.fetchByParentFolderId(rootFolder.getFolderId());
-//            Collection<FileMetadata> fileList = fileMetadataDao.fetchByEnclosingFolderId(rootFolder.getFolderId());
-//            return new FolderContent(folderList,fileList);
-//        } catch (NumberFormatException ex) {
-//            throw new ParameterFormatException(ex);
-//        }
-       return null;
+        Path path = Paths.get(request.params("path"));
+        List<FileMetadata> files = new ArrayList<>();
+        List<FolderMetadata> folders = new ArrayList<>();
+        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+        folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
+        files.addAll(fileMetadataDao.fetchByPathLower(path.toString()));
+        List<List> result = new ArrayList<>();
+        result.add(files);
+        result.add(folders);
+       return result;
     }
 
     public Object handleFolderData(Request request, Response response) {
