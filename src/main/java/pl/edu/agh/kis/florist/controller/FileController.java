@@ -2,6 +2,10 @@ package pl.edu.agh.kis.florist.controller;
 
 import com.google.gson.Gson;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import org.jooq.Configuration;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DefaultConfiguration;
 import pl.edu.agh.kis.florist.dao.FileDAO;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
@@ -13,6 +17,9 @@ import spark.Response;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
@@ -20,16 +27,29 @@ import java.sql.Timestamp;
  */
 
 public class FileController {
+    private final String DB_URL = "jdbc:sqlite:test.db";
     private static final int CREATED = 201;
 
     private final FileDAO fileRepository;
     private final Gson gson = new Gson();
 
-    private FolderMetadataDao folderMetadataDao = new FolderMetadataDao();
-    private FileMetadataDao fileMetadataDao = new FileMetadataDao();
+    private Connection connection;
+    private Configuration configuration;
+    private FileMetadataDao fileMetadataDao;
+
+    private FolderMetadataDao folderMetadataDao;
 
     public FileController(FileDAO fileRepository) {
         this.fileRepository = fileRepository;
+        try {
+            connection = DriverManager.getConnection(DB_URL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
+        fileMetadataDao = new FileMetadataDao(configuration);
+        folderMetadataDao = new FolderMetadataDao(configuration);
+
     }
 
     public Object handleFolderContent(Request request, Response response) {
@@ -90,33 +110,7 @@ public class FileController {
     }
 
     public Object handleCreateFolder(Request request, Response response) {
-
-//        String folderPath = request.params("path");
-//        FolderModel folder = gson.fromJson(request.body(), FolderModel.class);
-//        FolderModel result = fileRepository.createNewFolder(folder,folderPath);
-//        response.status(CREATED);
-//        return result;
-
-//        try{
-//            FolderModel folderModel = gson.fromJson(request.body(), FolderModel.class);
-//            Path folderPath = Paths.get(request.params("path").toLowerCase());
-//            FolderModel result = fileRepository.createNewFolder(folderModel,folderPath);
-//            response.status(CREATED);
-//            return result;
-//
-////            String folderPath = request.params("path");
-////           // FolderModel folderModel = fileRepository.createNewFolder(folderPath);
-////            return folderModel;
-////            Path p = Paths.get(folderPath); //metody klasy, wyciagniecie ostatniego czlonu
-////
-////            //FolderMetadataM folderNew = fileRepository.createFolderOfPath(folderPath);
-////            fileRepository.createNewFolder(folderModel,p); //parametry
-////            return ;//zwrocic nowy folder
-//        } catch (NumberFormatException ex){
-//            throw new ParameterFormatException(ex);
-//        }
-
-        Path path = Paths.get(request.params(":path"));
+        Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
         Path parentPath = path.getParent();
         if (parentPath != null) {

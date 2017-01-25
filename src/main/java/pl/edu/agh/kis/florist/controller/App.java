@@ -154,6 +154,16 @@ public class App {
 			response.status(405);
 		});
 
+		exception(Exception.class,(ex,req,res)-> {
+			System.err.println(String.format("format: %s",req.uri()));
+			System.err.println(String.format("params: %s",req.params()));
+			System.err.println(String.format("headers: %s",req.headers()));
+			System.err.println(String.format("cookies: %s",req.cookies()));
+			System.err.println(String.format("body: %s",req.body()));
+			//cos innego jeszcze?
+			ex.printStackTrace();
+		});
+
 	}
 
 //	public static void main(String[] args) {

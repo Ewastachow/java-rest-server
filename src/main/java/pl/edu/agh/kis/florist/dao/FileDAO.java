@@ -1,7 +1,10 @@
 package pl.edu.agh.kis.florist.dao;
 
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultConfiguration;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
@@ -12,6 +15,9 @@ import pl.edu.agh.kis.florist.model.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 import static pl.edu.agh.kis.florist.db.tables.FileMetadata.FILE_METADATA;
@@ -25,6 +31,7 @@ public class FileDAO {
     private final String DB_URL = "jdbc:sqlite:test.db";
     FileMetadataDao generatedFileDAO = new FileMetadataDao();
     FolderMetadataDao generatedFolderDAO = new FolderMetadataDao();
+
 
 
     public FolderFileModel loadFolderDataOfPath(String folderPath) {
@@ -107,8 +114,8 @@ public class FileDAO {
         }
     }
 
-    public FolderModel createNewFolder(FolderModel folderModel, Path path) {
-        int parentFolderId = 0;
+    public FolderMetadata createNewFolder(FolderMetadata folderModel) {
+        /*int parentFolderId = 0;
         String tmp;
         try {
             tmp = path.getParent().toString();
@@ -125,7 +132,7 @@ public class FileDAO {
                 if(i.getName().equals(path.getFileName().toString()))
                     parentFolderId = i.getFolderId();
             }
-        }
+        }*/
 //        List<FolderMetadata> whereLook =
 //                generatedFolderDAO.fetchByPathLower(tmp);
 //        for(FolderMetadata i : whereLook){
@@ -168,6 +175,13 @@ public class FileDAO {
         //generatedFolderDAO.insert(folder);
         //return (FolderModel) folder;
 //        String fileName = path.getFileName().toString();
-        return null;
+
+        try (DSLContext create = DSL.using(DB_URL)) {
+
+            FolderMetadataRecord record = create.newRecord(FOLDER_METADATA,folderModel);
+            record.store();
+            FolderMetadata retrieved = new FolderMetadata(record.into(FolderMetadata.class));
+            return retrieved;
+        }
     }
 }
