@@ -6,7 +6,6 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
-import pl.edu.agh.kis.florist.dao.FileDAO;
 import pl.edu.agh.kis.florist.db.tables.daos.FileContentsDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;

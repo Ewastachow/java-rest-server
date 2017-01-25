@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 
 import pl.edu.agh.kis.florist.dao.AuthorDAO;
 import pl.edu.agh.kis.florist.dao.BookDAO;
-import pl.edu.agh.kis.florist.dao.FileDAO;
 import pl.edu.agh.kis.florist.dao.UserDAO;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import pl.edu.agh.kis.florist.exceptions.ParameterFormatException;
