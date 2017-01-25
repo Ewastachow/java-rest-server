@@ -22,7 +22,7 @@ public class Apppp {
 
 	final static private Logger LOGGER = LoggerFactory.getILoggerFactory().getLogger("requests");
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 
 		final String AUTHORS_PATH = "/authors";
 		final String BOOKS_PATH = "/books";
@@ -54,7 +54,7 @@ public class Apppp {
 		//registers filter before processing of any request with special metothod stated below
 		//this method is run to log request with logger
 		//but similar method can be used to check user authorisation
-		before("/*/", (req, res) -> {
+		before("*//*//*", (req, res) -> {
 			info(req);
 		});
 
@@ -152,7 +152,7 @@ public class Apppp {
 			response.status(405);
 		});
 
-	}
+	}*/
 
 	private static void info(Request req) {
 		LOGGER.info("{}", req);

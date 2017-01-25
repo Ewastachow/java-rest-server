@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import pl.edu.agh.kis.florist.dao.FileDAO;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
+import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
 import pl.edu.agh.kis.florist.exceptions.ParameterFormatException;
 import pl.edu.agh.kis.florist.model.*;
 import spark.Request;
@@ -12,6 +13,7 @@ import spark.Response;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 
 /**
  * Created by yevvye on 14.01.2017.
@@ -26,15 +28,10 @@ public class FileController {
     private FolderMetadataDao folderMetadataDao = new FolderMetadataDao();
     private FileMetadataDao fileMetadataDao = new FileMetadataDao();
 
-    //file controller now can be easily tested
-    //and thanks to injection of DataAccessObject objects with constructor
-    //can be tested even without database at all - one can stub both interfaces
-    //with HashMap-like implementation
     public FileController(FileDAO fileRepository) {
         this.fileRepository = fileRepository;
     }
 
-    //zwraca zawartosc folderu
     public Object handleFolderContent(Request request, Response response) {
 //        try {
 //            String folderPath = request.params("path");
@@ -100,23 +97,46 @@ public class FileController {
 //        response.status(CREATED);
 //        return result;
 
-        try{
-            FolderModel folderModel = gson.fromJson(request.body(), FolderModel.class);
-            Path folderPath = Paths.get(request.params("path").toLowerCase());
-            FolderModel result = fileRepository.createNewFolder(folderModel,folderPath);
+//        try{
+//            FolderModel folderModel = gson.fromJson(request.body(), FolderModel.class);
+//            Path folderPath = Paths.get(request.params("path").toLowerCase());
+//            FolderModel result = fileRepository.createNewFolder(folderModel,folderPath);
+//            response.status(CREATED);
+//            return result;
+//
+////            String folderPath = request.params("path");
+////           // FolderModel folderModel = fileRepository.createNewFolder(folderPath);
+////            return folderModel;
+////            Path p = Paths.get(folderPath); //metody klasy, wyciagniecie ostatniego czlonu
+////
+////            //FolderMetadataM folderNew = fileRepository.createFolderOfPath(folderPath);
+////            fileRepository.createNewFolder(folderModel,p); //parametry
+////            return ;//zwrocic nowy folder
+//        } catch (NumberFormatException ex){
+//            throw new ParameterFormatException(ex);
+//        }
+
+        Path path = Paths.get(request.params(":path"));
+        FolderMetadata parent;
+        Path parentPath = path.getParent();
+        if (parentPath != null) {
+            String lowerPath = parentPath.toString().toLowerCase();
+            parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
+            Timestamp time = new Timestamp(System.currentTimeMillis());
+            FolderMetadata folder = new FolderMetadata(null, path.getFileName().toString(),
+                    path.toString().toLowerCase(), path.toString(), parent.getFolderId(), time);
+            folderMetadataDao.insert(folder);
+            FolderMetadata result = folderMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
             response.status(CREATED);
             return result;
-
-//            String folderPath = request.params("path");
-//           // FolderModel folderModel = fileRepository.createNewFolder(folderPath);
-//            return folderModel;
-//            Path p = Paths.get(folderPath); //metody klasy, wyciagniecie ostatniego czlonu
-//
-//            //FolderMetadataM folderNew = fileRepository.createFolderOfPath(folderPath);
-//            fileRepository.createNewFolder(folderModel,p); //parametry
-//            return ;//zwrocic nowy folder
-        } catch (NumberFormatException ex){
-            throw new ParameterFormatException(ex);
+        } else {
+            Timestamp time = new Timestamp(System.currentTimeMillis());
+            FolderMetadata folder = new FolderMetadata(null, path.getFileName().toString(),
+                    path.toString().toLowerCase(), path.toString(), null, time);
+            folderMetadataDao.insert(folder);
+            FolderMetadata result = folderMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
+            response.status(CREATED);
+            return result;
         }
     }
 }
