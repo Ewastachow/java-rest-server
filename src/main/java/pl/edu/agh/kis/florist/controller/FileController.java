@@ -78,22 +78,33 @@ public class FileController {
         FolderMetadata result = null;
         result = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
         if(result==null){ //// TODO: 25.01.17 Nie sprawdzone czy działa dla plików
-            List<FileMetadata> foundedFile = null;
-            foundedFile = fileMetadataDao.fetchByPathLower(path.getParent().toString());
-            for(FileMetadata i : foundedFile){
-                if(path.getFileName().toString().equals(i.getName())){
-                    return i;
-                }
+//            List<FileMetadata> foundedFile = null;
+//            foundedFile = fileMetadataDao.fetchByPathLower(path.getParent().toString());
+//            for(FileMetadata i : foundedFile){
+//                if(path.getFileName().toString().equals(i.getName())){
+//                    return i;
+//                }
+//            }
+//            throw new InvalidPathException(path.toString()+" not found");
+            FileMetadata foundedFile = null;
+            foundedFile = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+            if(foundedFile==null){
+                throw new InvalidPathException(path.toString()+" not found");
             }
-            throw new InvalidPathException(path.toString()+" not found");
         }
         return result;
     }
 
-    public Object handleDeleteFolder(Request request, Response response) {//// TODO: 25.01.17 Narazie działa tylko dla folderów, i nawet nie sprawdza czy to plik i musi usuwać szystko szystko co jest w środku,
+    public Object handleDeleteFolder(Request request, Response response) {//// TODO: 25.01.17 Nie testowane dla plików, i nawet nie sprawdza czy to plik i musi usuwać szystko szystko co jest w środku,
         Path path = Paths.get(request.params("path"));
         FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-        folderMetadataDao.delete(folder);
+        if( folder==null){
+            FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+            fileMetadataDao.delete(file);
+            FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
+            fileContentsDao.delete(fileContents);
+            return file;
+        }else folderMetadataDao.delete(folder);
         return folder;
     }
 
@@ -140,7 +151,7 @@ public class FileController {
         if (parentPath != null) {
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
-            Timestamp time = new Timestamp(System.currentTimeMillis());//// TODO: 25.01.17 nazwa pliku jest źle, powinna być jakoś z body brana
+            Timestamp time = new Timestamp(System.currentTimeMillis());//// TODO: 25.01.17 nazwa pliku - nie wiem czy jest db
             file = new FileMetadata(null, path.getFileName().toString(),
                     path.toString().toLowerCase(), path.toString(), parent.getFolderId(), content.length(), time, time, parent.getFolderId());
             fileMetadataDao.insert(file);
