@@ -129,11 +129,16 @@ public class FileController {
         return null;
     }
 
-    public Object handleCreateFolder(Request request, Response response) {//// TODO: 25.01.17 Sprawdzić czy path istnieje
+    public Object handleCreateFolder(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
         Path parentPath = path.getParent();
         if (parentPath != null) {
+            try{
+                FolderMetadata tested = folderMetadataDao.fetchByPathLower(path.getParent().toString()).get(0);
+            }catch(Exception e){
+                throw new InvalidPathException(path.toString()+" cant exist");
+            }
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -154,7 +159,7 @@ public class FileController {
         }
     }
 
-    public Object handlePostFile(Request request, Response response) { //// TODO: 25.01.17 Sprawdzić czy path istnieje
+    public Object handlePostFile(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
         FileMetadata file;
@@ -162,6 +167,11 @@ public class FileController {
         FileMetadata result;
         Path parentPath = path.getParent();
         if (parentPath != null) {
+            try{
+                FolderMetadata tested = folderMetadataDao.fetchByPathLower(path.getParent().toString()).get(0);
+            }catch(Exception e){
+                throw new InvalidPathException(path.toString()+" cant exist");
+            }
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -182,11 +192,12 @@ public class FileController {
         return result;
     }
 
-    public Object handleRenameFolder(Request request, Response response) {//// TODO: 25.01.17 everything
+    public Object handleRenameFolder(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            //// TODO: 25.01.17 implement rename for folders -- not necessery
 
         }catch(Exception e){
             try{
