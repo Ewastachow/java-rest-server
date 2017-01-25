@@ -9,7 +9,9 @@ import org.jooq.impl.DefaultConfiguration;
 import pl.edu.agh.kis.florist.dao.FileDAO;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
+import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
 import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
+import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import pl.edu.agh.kis.florist.exceptions.ParameterFormatException;
 import pl.edu.agh.kis.florist.model.*;
 import spark.Request;
@@ -76,14 +78,17 @@ public class FileController {
     }
 
     public Object handleFolderData(Request request, Response response) {
-        try {
-            String folderPath = request.params("path");
-            FolderFileModel folderModel = fileRepository.loadFolderDataOfPath(folderPath);
-            return folderModel;
-        } catch (NumberFormatException ex) {
-            throw new ParameterFormatException(ex);
+        Path path = Paths.get(request.params("path"));
+        FolderMetadata result = null;
+        result = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+        if(result==null){
+            FileMetadata foundedFile = null;
+            foundedFile = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+            if(foundedFile==null){
+                throw new InvalidPathException(path.toString()+" not found");
+            }
         }
-//        return null;
+        return result;
     }
 
     public Object handleDeleteFolder(Request request, Response response) { //czy ma zwracac kod bledu?
