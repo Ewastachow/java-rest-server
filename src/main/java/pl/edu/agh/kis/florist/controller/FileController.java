@@ -76,26 +76,21 @@ public class FileController {
     public Object handleFolderData(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
-        result = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-        if(result==null){ //// TODO: 25.01.17 Nie sprawdzone czy działa dla plików
-//            List<FileMetadata> foundedFile = null;
-//            foundedFile = fileMetadataDao.fetchByPathLower(path.getParent().toString());
-//            for(FileMetadata i : foundedFile){
-//                if(path.getFileName().toString().equals(i.getName())){
-//                    return i;
-//                }
-//            }
-//            throw new InvalidPathException(path.toString()+" not found");
-            FileMetadata foundedFile = null;
-            foundedFile = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
-            if(foundedFile==null){
+        try{
+            result = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            return result;
+        }catch(Exception e){
+            try{
+                FileMetadata foundedFile = null;
+                foundedFile = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+                return foundedFile;
+            }catch (Exception ex){
                 throw new InvalidPathException(path.toString()+" not found");
             }
         }
-        return result;
     }
 
-    public Object handleDeleteFolder(Request request, Response response) {//// TODO: 25.01.17 Nie testowane dla plików, i nawet nie sprawdza czy to plik i musi usuwać szystko szystko co jest w środku,
+    public Object handleDeleteFolder(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
@@ -130,7 +125,7 @@ public class FileController {
         return null;
     }
 
-    public Object handleCreateFolder(Request request, Response response) {
+    public Object handleCreateFolder(Request request, Response response) {//// TODO: 25.01.17 Sprawdzić czy path istnieje
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
         Path parentPath = path.getParent();
@@ -155,7 +150,7 @@ public class FileController {
         }
     }
 
-    public Object handlePostFile(Request request, Response response) {
+    public Object handlePostFile(Request request, Response response) { //// TODO: 25.01.17 Sprawdzić czy path istnieje
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
         FileMetadata file;
@@ -165,7 +160,7 @@ public class FileController {
         if (parentPath != null) {
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
-            Timestamp time = new Timestamp(System.currentTimeMillis());//// TODO: 25.01.17 nazwa pliku - nie wiem czy jest db
+            Timestamp time = new Timestamp(System.currentTimeMillis());
             file = new FileMetadata(null, path.getFileName().toString(),
                     path.toString().toLowerCase(), path.toString(), parent.getFolderId(), content.length(), time, time, parent.getFolderId());
             fileMetadataDao.insert(file);
