@@ -1,23 +1,42 @@
 package pl.edu.agh.kis.florist.controller;
 
 import com.google.gson.Gson;
-import pl.edu.agh.kis.florist.dao.UserDAO;
-import pl.edu.agh.kis.florist.model.UserModel;
+import org.jooq.Configuration;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DefaultConfiguration;
+import org.mindrot.jbcrypt.BCrypt;
+import pl.edu.agh.kis.florist.db.tables.daos.UsersDao;
+import pl.edu.agh.kis.florist.db.tables.pojos.Users;
 import spark.Request;
 import spark.Response;
-import org.mindrot.jbcrypt.BCrypt;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * Created by yevvye on 16.01.17.
  */
 public class UserController {
+    private final String DB_URL = "jdbc:sqlite:test.db";
 
     private static final int CREATED = 201;
-    private final UserDAO userRepository;
+
+    private Connection connection;
+    private Configuration configuration;
+
+    private UsersDao usersDao;
     private final Gson gson = new Gson();
 
-    public UserController(UserDAO userRepository) {
-        this.userRepository = userRepository;
+    public UserController() {
+        try {
+            connection = DriverManager.getConnection(DB_URL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
+
+        usersDao = new UsersDao(configuration);
     }
 
     public Object handleUserAccess(Request request, Response response) {
@@ -25,16 +44,18 @@ public class UserController {
     }
 
     public Object handleCreateNewUser(Request request, Response response) {
-        UserModel userModel = gson.fromJson(request.body(), UserModel.class);
-        UserModel result = userRepository.store(userModel);
+        Users users = gson.fromJson(request.body(), Users.class);
+        Users user = new Users(null,users.getUserName(),users.getUserName(),createNewHashedPassword(users.getHashedPassword()));
+        usersDao.insert(user);
         response.status(CREATED);
-        return result;
+        return user;
     }
 
-    /*public static String createNewHashedPassword(String password) {
+    public static String createNewHashedPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
+
     public static boolean checkPassword(String candidatePassword,String storedHashedPassword) {
         return BCrypt.checkpw(candidatePassword, storedHashedPassword);
-    }*/
+    }
 }
