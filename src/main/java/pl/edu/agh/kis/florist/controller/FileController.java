@@ -179,13 +179,21 @@ public class FileController {
         return null;
     }
 
-    private List<Object> getListOfAllObjectInside(List<Object> list, int folderId){
+    private List<FolderMetadata> getListOfAllFoldersInside(int folderId){
+        List<FolderMetadata> list = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
         folders.addAll(folderMetadataDao.fetchByParentFolderId(folderId));
-        list.addAll(fileMetadataDao.fetchByParentFolderId(folderId));
         list.addAll(folders);
         for(FolderMetadata i : folders){
-            getListOfAllObjectInside(list, i.getFolderId());
+            list.addAll(getListOfAllFoldersInside(i.getFolderId()));
+        }
+        return list;
+    }
+
+    private List<FileMetadata> getListOfAllFilesInListOfFolders(List<FolderMetadata> folders){
+        List<FileMetadata> list = new ArrayList<>();
+        for(FolderMetadata i : folders){
+            list.addAll(fileMetadataDao.fetchByParentFolderId(i.getFolderId()));
         }
         return list;
     }
