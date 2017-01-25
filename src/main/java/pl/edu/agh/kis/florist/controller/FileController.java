@@ -184,11 +184,31 @@ public class FileController {
 
     public Object handleRenameFolder(Request request, Response response) {//// TODO: 25.01.17 everything
         Path path = Paths.get(request.params("path"));
-        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-        if(folder==null){
-            FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
-        }
         String newName = request.queryParams("new_name");
+        try{
+            FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+
+        }catch(Exception e){
+            try{
+                FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+                fileMetadataDao.delete(file);
+
+                Path oldPath = Paths.get(file.getPathLower());
+                String newPath = oldPath.getParent()+"/"+newName;
+
+                Timestamp time = new Timestamp(System.currentTimeMillis());
+                FileMetadata newFile = new FileMetadata(file.getFileId(), newName, newPath,
+                        newPath, file.getParentFolderId(), file.getSize(), file.getServerCreatedAt(), time, file.getEnclosingFolderId());
+
+                fileMetadataDao.insert(newFile);
+                response.status(CREATED);
+                return newFile;
+
+            }catch(Exception ex){
+                throw new InvalidPathException(path.toString()+" not exist");
+            }
+
+        }
         return null;
     }
 
