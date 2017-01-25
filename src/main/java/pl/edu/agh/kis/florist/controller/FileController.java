@@ -56,7 +56,7 @@ public class FileController {
 
     }
 
-    public Object handleFolderContent(Request request, Response response) {
+    public Object handleFolderContent(Request request, Response response) {//// TODO: 25.01.17 Wyrzucanie wyjątku gdy szukany folder nie istnieje
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
@@ -73,7 +73,7 @@ public class FileController {
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
         result = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-        if(result==null){
+        if(result==null){ //// TODO: 25.01.17 Nie sprawdzone czy działa dla plików
             FileMetadata foundedFile = null;
             foundedFile = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
             if(foundedFile==null){
@@ -83,15 +83,11 @@ public class FileController {
         return result;
     }
 
-    public Object handleDeleteFolder(Request request, Response response) { //czy ma zwracac kod bledu?
-        /*try{
-            String folderPath = request.params("path");
-            int kod = fileRepository.deleteFolderOfPath(folderPath);
-            return kod;
-        } catch (NumberFormatException ex){
-            throw new ParameterFormatException(ex);
-        }*/
-        return null;
+    public Object handleDeleteFolder(Request request, Response response) {//// TODO: 25.01.17 Narazie działa tylko dla folderów, i nawet nie sprawdza czy to plik,  
+        Path path = Paths.get(request.params("path"));
+        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+        folderMetadataDao.delete(folder);
+        return folder;
     }
 
     public Object handleMoveFolder(Request request, Response response) {

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f24bdf37-6b90-430a-a8ef-fa568fc6d8db" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.db" afterPath="$PROJECT_DIR$/test.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" afterPath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" />
     </list>
     <ignored path="java-rest.iws" />
@@ -38,10 +39,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="App.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="App.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
+            <state relative-caret-position="-833">
               <caret line="34" column="76" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="76" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -50,15 +51,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileController.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FileController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="66" column="26" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="26" />
+            <state relative-caret-position="117">
+              <caret line="67" column="28" selection-start-line="67" selection-start-column="28" selection-end-line="67" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#FileController#0;class#FileController#0" expanded="false" />
-                <element signature="method#handleDeleteFolder#0;class#FileController#0" expanded="false" />
                 <element signature="method#handleMoveFolder#0;class#FileController#0" expanded="false" />
                 <element signature="method#handleCreateFolder#0;class#FileController#0" expanded="false" />
               </folding>
@@ -79,8 +79,8 @@
       <file leaf-file-name="FolderMetadataDao.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build/generated-src/jooq/sample/pl/edu/agh/kis/florist/db/tables/daos/FolderMetadataDao.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="41" column="56" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="56" />
+            <state relative-caret-position="252">
+              <caret line="29" column="41" selection-start-line="29" selection-start-column="41" selection-end-line="29" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -89,8 +89,8 @@
       <file leaf-file-name="DAOImpl.java" pinned="false" current-in-tab="false">
         <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jooq/jooq/3.8.6/a96d33f99c04d5353f425c3bb3134a261e3c41cc/jooq-3.8.6-sources.jar!/org/jooq/impl/DAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="164" column="0" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
+            <state relative-caret-position="155">
+              <caret line="215" column="38" selection-start-line="215" selection-start-column="32" selection-end-line="215" selection-end-column="42" />
               <folding>
                 <element signature="e#4268#4269#0" expanded="true" />
                 <element signature="e#4313#4314#0" expanded="true" />
@@ -1547,12 +1547,12 @@
       <option name="presentableId" value="Default" />
       <updated>1485347526081</updated>
       <workItem from="1485347528819" duration="693000" />
-      <workItem from="1485349316098" duration="8022000" />
+      <workItem from="1485349316098" duration="8656000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8715000" />
+    <option name="totallyTimeSpent" value="9349000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="769" extended-state="6" />
@@ -1563,9 +1563,9 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5030211" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.50453174" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32919255" sideWeight="0.4954683" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.49697885" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1768,17 +1768,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jooq/jooq/3.8.6/a96d33f99c04d5353f425c3bb3134a261e3c41cc/jooq-3.8.6-sources.jar!/org/jooq/impl/DAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="164" column="0" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
-          <folding>
-            <element signature="e#4268#4269#0" expanded="true" />
-            <element signature="e#4313#4314#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jooq/jooq/3.8.6/a96d33f99c04d5353f425c3bb3134a261e3c41cc/jooq-3.8.6-sources.jar!/org/jooq/impl/TableRecordImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="127">
@@ -1815,14 +1804,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/jooq/sample/pl/edu/agh/kis/florist/db/tables/daos/FolderMetadataDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="41" column="56" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/dao/FileDAO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1841,26 +1822,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="66" column="26" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="26" />
+        <state relative-caret-position="-833">
+          <caret line="34" column="76" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="76" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#FileController#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleDeleteFolder#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleMoveFolder#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleCreateFolder#0;class#FileController#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java">
+    <entry file="file://$PROJECT_DIR$/build/generated-src/jooq/sample/pl/edu/agh/kis/florist/db/tables/daos/FolderMetadataDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="34" column="76" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="76" />
+        <state relative-caret-position="252">
+          <caret line="29" column="41" selection-start-line="29" selection-start-column="41" selection-end-line="29" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jooq/jooq/3.8.6/a96d33f99c04d5353f425c3bb3134a261e3c41cc/jooq-3.8.6-sources.jar!/org/jooq/impl/DAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="215" column="38" selection-start-line="215" selection-start-column="32" selection-end-line="215" selection-end-column="42" />
+          <folding>
+            <element signature="e#4268#4269#0" expanded="true" />
+            <element signature="e#4313#4314#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="67" column="28" selection-start-line="67" selection-start-column="28" selection-end-line="67" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#FileController#0;class#FileController#0" expanded="false" />
+            <element signature="method#handleMoveFolder#0;class#FileController#0" expanded="false" />
+            <element signature="method#handleCreateFolder#0;class#FileController#0" expanded="false" />
           </folding>
         </state>
       </provider>
