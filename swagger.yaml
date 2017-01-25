@@ -1,0 +1,196 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Florist REST service
+
+# the domain of the service
+host: borg.kis.agh.edu.pl
+# array of all schemes that your API supports
+schemes:
+  - http
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+  - application/xml
+
+# Describe your paths here
+paths:
+  /clients:
+    # This is a HTTP operation
+    get:
+      operationId: get all clients
+      tags:
+        - Client
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        Gets `Client` objects.
+        Optional query param of **size** determines
+        size of returned array
+      # This is array of GET operation parameters:
+      parameters:
+        # An example parameter that is in query and is required
+        -
+          name: size
+          in: query
+          description: Size of array
+          required: false
+          type: integer
+          format: int32
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: ArrayOfClients
+            type: array
+            items:
+              $ref: '#/definitions/Client'
+          examples:
+            application/json:
+              - idklienta: KOWALSKI01
+                haslo: ugx89
+                nazwa: kowal
+                miasto: Kraków
+                kod: 30-100
+                adres: Rynek 3/4
+                telefon: 123-456-789
+              - idklienta: NOWAK00001
+                haslo: wrxy100
+                nazwa: kowal
+                miasto: Kraków
+                kod: 30-100
+                adres: Rynek 3/4
+                telefon: 123-456-789
+            
+    post:
+      tags:
+        - Client
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        Creates `Client` object.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: client
+          in: body
+          description: data of the new `Client`
+          required: true
+          schema:
+            $ref: '#/definitions/Client'
+      responses:
+        405:
+          description:  Validation exception
+            
+  /client/{clientId}:
+    get:
+      tags:
+        - Client
+      description: Retrives specified `Client`.
+      parameters:
+        - name: clientId
+          in: path
+          description: id of existing `Client`
+          required: true
+          type: string
+      responses:
+        200:
+          description:  Successful response
+          schema:
+            $ref: '#/definitions/Client'
+        400:
+          description:  Invalid `clientId` supplied
+        404:
+          description: Client not found
+    delete:
+      tags:
+        - Client
+      description: Retrives specified `Client`.
+      parameters:
+        - name: clientId
+          in: path
+          description: id of existing `Client`
+          required: true
+          type: string
+      responses:
+        400:
+          description:  Invalid `clientId` supplied
+        404:
+          description: Client not found
+    put:
+      tags:
+        - Client
+      description: Retrives specified `Client`.
+      parameters:
+        - name: clientId
+          in: path
+          description: id of existing `Client`
+          required: true
+          type: string
+      responses:
+        400:
+          description:  Invalid `clientId` supplied
+        404:
+          description: Client not found
+        405:
+          description:  Validation exception
+        
+                  
+definitions:
+  Client:
+    type: object
+    required:
+      - idklienta
+      - haslo
+      - nazwa
+      - miasto
+      - kod
+      - adres
+      - telefon
+    properties:
+      idklienta:
+        type: string
+        description: maksymalnie 10 znaków (tzn. użyć varchar(10)), klucz główny,
+      haslo:
+        type: string
+        description: maksymalnie 10 znaków, minimum 4 znaki,
+      nazwa:
+        type: string
+        description: maksymalnie 40 znaków
+      miasto: 
+        type: string
+        description: maksymalnie 40 znaków,
+      kod: 
+        type: string 
+        description: dokładnie 6 znaków,
+      adres: 
+        type: string
+        description: maksymalnie 40 znaków,
+      email: 
+        type: string
+        description: maksymalnie 40 znaków,
+      telefon: 
+        type: string
+        description: maksymalnie 16 znaków,
+      fax: 
+        type: string
+        description: maksymalnie 16 znaków,
+      nip: 
+        type: string
+        description: dokładnie 13 znaków,
+      regon:  
+        type: string
+        description: dokładnie 9 znaków
+
+      
+      
+    
+          
