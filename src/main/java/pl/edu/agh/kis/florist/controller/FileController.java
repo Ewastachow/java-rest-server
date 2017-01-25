@@ -97,15 +97,29 @@ public class FileController {
 
     public Object handleDeleteFolder(Request request, Response response) {//// TODO: 25.01.17 Nie testowane dla plików, i nawet nie sprawdza czy to plik i musi usuwać szystko szystko co jest w środku,
         Path path = Paths.get(request.params("path"));
-        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-        if( folder==null){
-            FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
-            fileMetadataDao.delete(file);
-            FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
-            fileContentsDao.delete(fileContents);
-            return file;
-        }else folderMetadataDao.delete(folder);
-        return folder;
+        try{
+            FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
+            List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
+            for(FileMetadata i : files){
+                FileContents fileContents = fileContentsDao.fetchOneByFileId(i.getFileId());
+                fileContentsDao.delete(fileContents);
+                fileMetadataDao.delete(i);
+            }
+            for(FolderMetadata i : folders) folderMetadataDao.delete(i);
+            folderMetadataDao.delete(folder);
+            return folder;
+        }catch (Exception e){
+            try{
+                FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+                FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
+                fileContentsDao.delete(fileContents);
+                fileMetadataDao.delete(file);
+                return file;
+            }catch (Exception ex){
+                throw new InvalidPathException(path.toString()+" not exist");
+            }
+        }
     }
 
     public Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
@@ -190,11 +204,12 @@ public class FileController {
         return list;
     }
 
-    private List<FileMetadata> getListOfAllFilesInListOfFolders(List<FolderMetadata> folders){
+    private List<FileMetadata> getListOfAllFilesInListOfFolders(List<FolderMetadata> folders, int folderId){
         List<FileMetadata> list = new ArrayList<>();
         for(FolderMetadata i : folders){
             list.addAll(fileMetadataDao.fetchByParentFolderId(i.getFolderId()));
         }
+        list.addAll(fileMetadataDao.fetchByParentFolderId(folderId));
         return list;
     }
  }
