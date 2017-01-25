@@ -35,8 +35,9 @@ public class App {
 		final String FOLDER_CONTENT_PATH = "/files/:path/list_folder_content";
 		final String FOLDER_PATH = "/files/:path/get_meta_data";
 		final String FOLDER_DELETE_PATH = "/files/:path/delete";
-		final String FOLDER_MOVE_PATH = "/files/:path/:newpath/move";
+		final String FOLDER_MOVE_PATH = "/files/:path/move";
 		final String FOLDER_CREATE_PATH = "/files/:path/create_directory";
+		final String FOLDER_RENAME_PATH = "/files/:path/rename";
 		final String FILE_POST_PATH = "/files/:path/upload";
 
 		final String USER_CREATE_PATH = "/users/create_user";
@@ -124,6 +125,12 @@ public class App {
 
 		post(FILE_POST_PATH, "multipart/form-data", (request, response) -> {
 			return fileController.handlePostFile(request,response);
+		}, json);
+
+		//registers HTTP GET on resource /files/{path}/move
+		//and delegates processing into FileController
+		put(FOLDER_RENAME_PATH, (request, response) -> {
+			return fileController.handleRenameFolder(request,response);
 		}, json);
 
 

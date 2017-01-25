@@ -96,7 +96,7 @@ public class FileController {
 
     public Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
         Path path = Paths.get(request.params("path"));
-        Path newpath = Paths.get(request.params("path"));
+        String newName = request.queryParams("new_path");
         FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
 
         return null;
@@ -129,7 +129,7 @@ public class FileController {
 
     public Object handlePostFile(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
-        String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana 
+        String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
         FileMetadata file;
         FolderMetadata parent;
         FileMetadata result;
@@ -153,5 +153,15 @@ public class FileController {
         fileContentsDao.insert(fileContents);
         response.status(CREATED);
         return result;
+    }
+
+    public Object handleRenameFolder(Request request, Response response) {//// TODO: 25.01.17 everything
+        Path path = Paths.get(request.params("path"));
+        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+        if(folder==null){
+            FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+        }
+        String newName = request.queryParams("new_name");
+        return null;
     }
 }
