@@ -106,6 +106,17 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
+          <root url="jar:///home/yevvye/.gradle/caches/modules-2/files-2.1/org.mindrot/jbcrypt/0.3m/fe2d9c5f23767d681a7e38fc8986b812400ec583/jbcrypt-0.3m.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///home/yevvye/.gradle/caches/modules-2/files-2.1/org.mindrot/jbcrypt/0.3m/a846e415cf6593433c7d3d23c1b0699e30c124f4/jbcrypt-0.3m-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
           <root url="jar:///home/yevvye/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.0.13/dc6e6ce937347bd4d990fc89f4ceb469db53e45e/logback-core-1.0.13.jar!/"/>
         </CLASSES>
         <JAVADOC/>

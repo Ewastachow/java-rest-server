@@ -66,7 +66,7 @@ public class FileController {
         List<FolderMetadata> folders = new ArrayList<>();
         FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
         folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
-        files.addAll(fileMetadataDao.fetchByPathLower(path.toString()));
+        files.addAll(fileMetadataDao.fetchByParentFolderId(folder.getFolderId()));
         List<List> result = new ArrayList<>();
         result.add(files);
         result.add(folders);
@@ -96,7 +96,7 @@ public class FileController {
 
     public Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
         Path path = Paths.get(request.params("path"));
-        String newName = request.queryParams("new_path");
+        String newPath = request.queryParams("new_path");
         FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
 
         return null;
@@ -139,13 +139,13 @@ public class FileController {
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
             file = new FileMetadata(null, path.getFileName().toString(),
-                    path.toString().toLowerCase(), path.toString(), content.length(), time, time, parent.getFolderId());
+                    path.toString().toLowerCase(), path.toString(), parent.getFolderId(), content.length(), time, time, parent.getFolderId());
             fileMetadataDao.insert(file);
             result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
         } else {
             Timestamp time = new Timestamp(System.currentTimeMillis());
             file = new FileMetadata(null, path.getFileName().toString(),
-                    path.toString().toLowerCase(), path.toString(), content.length(), time, time, null);
+                    path.toString().toLowerCase(), path.toString(), null, content.length(), time, time, null);
             fileMetadataDao.insert(file);
             result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
         }
@@ -164,4 +164,13 @@ public class FileController {
         String newName = request.queryParams("new_name");
         return null;
     }
-}
+
+    private List<Object> getListOfAllObjectInside(List<Object> list, int folderId){
+        List<FolderMetadata> folders = new ArrayList<>();
+//        folders.addAll(folderMetadataDao.fetchByParentFolderId(folderId));
+//        list.addAll(folders);
+//        list.addAll(fileMetadataDao.fetchByPathLower(fo))
+//        for()
+        return list;
+    }
+ }
