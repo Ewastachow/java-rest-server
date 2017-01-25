@@ -39,14 +39,14 @@ public class App {
 		final String FOLDER_CREATE_PATH = "/files/:path/create_directory";
 		final String FOLDER_RENAME_PATH = "/files/:path/rename";
 		final String FILE_POST_PATH = "/files/:path/upload";
+		final String FILE_DOWNLOAD_PATH = "/files/:path/download";
 
 		final String USER_CREATE_PATH = "/users/create_user";
 
 
 
-		final FileController fileController = new FileController(new FileDAO());
+		final FileController fileController = new FileController();
 		final BookController bookController = new BookController(new AuthorDAO(),new BookDAO());
-//		final FolderController folderController = new FolderController(new FolderDAO());
 		final UserController userController = new UserController(new UserDAO());
 
 		final Gson gson = new Gson();
@@ -131,6 +131,10 @@ public class App {
 		//and delegates processing into FileController
 		put(FOLDER_RENAME_PATH, (request, response) -> {
 			return fileController.handleRenameFolder(request,response);
+		}, json);
+
+		get(FILE_DOWNLOAD_PATH, (request, response) -> {
+			return fileController.handleDownloadFile(request,response);
 		}, json);
 
 

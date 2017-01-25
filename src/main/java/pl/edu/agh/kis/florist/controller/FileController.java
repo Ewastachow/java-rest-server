@@ -36,7 +36,6 @@ public class FileController {
     private final String DB_URL = "jdbc:sqlite:test.db";
     private static final int CREATED = 201;
 
-    private final FileDAO fileRepository;
     private final Gson gson = new Gson();
 
     private Connection connection;
@@ -46,8 +45,7 @@ public class FileController {
     private FolderMetadataDao folderMetadataDao;
     private FileContentsDao fileContentsDao;
 
-    public FileController(FileDAO fileRepository) {
-        this.fileRepository = fileRepository;
+    public FileController() {
         try {
             connection = DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
@@ -223,6 +221,19 @@ public class FileController {
         return null;
     }
 
+    public Object handleDownloadFile(Request request, Response response) {
+        Path path = Paths.get(request.params("path"));
+        try{
+            FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+            FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
+
+            return fileContents.getContents();//// TODO: 25.01.17 Czy to jest poprawne???
+
+        }catch(Exception e){
+            throw new InvalidPathException(path.toString()+" file not exist");
+        }
+    }
+
     private List<FolderMetadata> getListOfAllFoldersInside(int folderId){
         List<FolderMetadata> list = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
@@ -242,4 +253,4 @@ public class FileController {
         list.addAll(fileMetadataDao.fetchByParentFolderId(folderId));
         return list;
     }
- }
+}
