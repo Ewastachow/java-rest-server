@@ -120,10 +120,45 @@ public class FileController {
 
     public Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
         Path path = Paths.get(request.params("path"));
-        String newPath = request.queryParams("new_path");
-        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+        Path newPath = Paths.get(request.queryParams("new_path"));
+        int toChange = path.getNameCount();
 
-        return null;
+        try{
+            FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+
+            List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
+            List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
+
+            folderMetadataDao.delete(folder);
+            FolderMetadata newFolder = new FolderMetadata(folder.getFolderId(), folder.getName(),
+                    newPath.toString()+"/"+folder.getName(), newPath.toString()+"/"+folder.getName(), folder.getParentFolderId(), folder.getServerCreatedAt());
+            folderMetadataDao.insert(newFolder);
+
+            for(FolderMetadata i: folders){
+                Path oldPath = Paths.get(i.getPathLower());
+                String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange-1,oldPath.getNameCount());
+
+                folderMetadataDao.delete(i);
+                FolderMetadata newI = new FolderMetadata(i.getFolderId(), i.getName(),
+                        newIPathString, newIPathString, i.getParentFolderId(), i.getServerCreatedAt());
+                folderMetadataDao.insert(newI);
+            }
+            for(FileMetadata i : files){
+                Path oldPath = Paths.get(i.getPathLower());
+                String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange-1,oldPath.getNameCount());
+
+                Timestamp time = new Timestamp(System.currentTimeMillis());
+
+                fileMetadataDao.delete(i);
+                FileMetadata newI = new FileMetadata(i.getFileId(), i.getName(),
+                        newIPathString, newIPathString, i.getParentFolderId(), i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
+                fileMetadataDao.insert(newI);
+            }
+            return newFolder;
+
+        }catch(Exception e){
+            throw new InvalidPathException(path.toString()+" nope");
+        }
     }
 
     public Object handleCreateFolder(Request request, Response response) {

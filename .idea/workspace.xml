@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f24bdf37-6b90-430a-a8ef-fa568fc6d8db" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FolderContent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FolderFileModel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FolderModel.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.db" afterPath="$PROJECT_DIR$/test.db" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java" afterPath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/UserController.java" afterPath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/UserController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" afterPath="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" />
     </list>
     <ignored path="java-rest.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -74,19 +68,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileController.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FileController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="254" column="1" selection-start-line="254" selection-start-column="1" selection-end-line="254" selection-end-column="1" />
+            <state relative-caret-position="88">
+              <caret line="133" column="98" selection-start-line="133" selection-start-column="98" selection-end-line="133" selection-end-column="98" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#FileController#0;class#FileController#0" expanded="false" />
                 <element signature="method#handleFolderContent#0;class#FileController#0" expanded="false" />
                 <element signature="method#handleFolderData#0;class#FileController#0" expanded="false" />
-                <element signature="method#handleDeleteFolder#0;class#FileController#0" expanded="false" />
+                <element signature="method#handleCreateFolder#0;class#FileController#0" expanded="false" />
                 <element signature="method#handlePostFile#0;class#FileController#0" expanded="false" />
-                <element signature="method#handleRenameFolder#0;class#FileController#0" expanded="false" />
                 <element signature="method#handleDownloadFile#0;class#FileController#0" expanded="false" />
                 <element signature="method#getListOfAllFoldersInside#0;class#FileController#0" expanded="false" />
                 <element signature="method#getListOfAllFilesInListOfFolders#0;class#FileController#0" expanded="false" />
@@ -105,10 +98,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="App.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="App.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-693">
+            <state relative-caret-position="777">
               <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -687,11 +680,11 @@
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/Apppp.java" />
         <option value="$PROJECT_DIR$/src/main/resources/db/migration/V4__create_file_metadata_table.sql" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/FileModel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FolderController.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/model/User.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/UserController.java" />
         <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java" />
+        <option value="$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java" />
       </list>
     </option>
   </component>
@@ -1599,12 +1592,12 @@
       <option name="presentableId" value="Default" />
       <updated>1485347526081</updated>
       <workItem from="1485347528819" duration="693000" />
-      <workItem from="1485349316098" duration="30528000" />
+      <workItem from="1485349316098" duration="33719000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31221000" />
+    <option name="totallyTimeSpent" value="34412000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="769" extended-state="6" />
@@ -1617,7 +1610,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.50453174" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35248446" sideWeight="0.4954683" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35248446" sideWeight="0.4954683" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.49697885" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1629,7 +1622,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2872671" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2872671" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2023,25 +2016,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="254" column="1" selection-start-line="254" selection-start-column="1" selection-end-line="254" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#FileController#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleFolderContent#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleFolderData#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleDeleteFolder#0;class#FileController#0" expanded="false" />
-            <element signature="method#handlePostFile#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleRenameFolder#0;class#FileController#0" expanded="false" />
-            <element signature="method#handleDownloadFile#0;class#FileController#0" expanded="false" />
-            <element signature="method#getListOfAllFoldersInside#0;class#FileController#0" expanded="false" />
-            <element signature="method#getListOfAllFilesInListOfFolders#0;class#FileController#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/BookController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -2069,10 +2043,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/App.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-693">
+        <state relative-caret-position="777">
           <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/pl/edu/agh/kis/florist/controller/FileController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="133" column="98" selection-start-line="133" selection-start-column="98" selection-end-line="133" selection-end-column="98" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#FileController#0;class#FileController#0" expanded="false" />
+            <element signature="method#handleFolderContent#0;class#FileController#0" expanded="false" />
+            <element signature="method#handleFolderData#0;class#FileController#0" expanded="false" />
+            <element signature="method#handleCreateFolder#0;class#FileController#0" expanded="false" />
+            <element signature="method#handlePostFile#0;class#FileController#0" expanded="false" />
+            <element signature="method#handleDownloadFile#0;class#FileController#0" expanded="false" />
+            <element signature="method#getListOfAllFoldersInside#0;class#FileController#0" expanded="false" />
+            <element signature="method#getListOfAllFilesInListOfFolders#0;class#FileController#0" expanded="false" />
           </folding>
         </state>
       </provider>
