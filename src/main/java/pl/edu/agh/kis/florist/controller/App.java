@@ -164,6 +164,7 @@ public class App {
 
 		exception(InvalidPathException.class,(ex, request, response) -> {
 			response.status(405);
+//			response.body(gson.toJson(new ParameterFormatError(request.params()))); // TODO: 25.01.17 Zaimplementować tu ale nie wiem co
 		});
 
 		exception(Exception.class,(ex,req,res)-> {

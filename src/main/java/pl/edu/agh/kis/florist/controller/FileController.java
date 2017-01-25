@@ -60,17 +60,21 @@ public class FileController {
 
     }
 
-    public Object handleFolderContent(Request request, Response response) {//// TODO: 25.01.17 Wyrzucanie wyjątku gdy szukany folder nie istnieje
+    public Object handleFolderContent(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
-        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-        folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
-        files.addAll(fileMetadataDao.fetchByParentFolderId(folder.getFolderId()));
-        List<List> result = new ArrayList<>();
-        result.add(files);
-        result.add(folders);
-       return result;
+        try{
+            FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
+            files.addAll(fileMetadataDao.fetchByParentFolderId(folder.getFolderId()));
+            List<List> result = new ArrayList<>();
+            result.add(files);
+            result.add(folders);
+            return result;
+        }catch(Exception e) {
+            throw new InvalidPathException(path.toString()+" not exist");
+        }
     }
 
     public Object handleFolderData(Request request, Response response) {
