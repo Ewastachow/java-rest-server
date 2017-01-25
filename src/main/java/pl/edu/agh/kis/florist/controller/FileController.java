@@ -7,8 +7,10 @@ import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
 import pl.edu.agh.kis.florist.dao.FileDAO;
+import pl.edu.agh.kis.florist.db.tables.daos.FileContentsDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
+import pl.edu.agh.kis.florist.db.tables.pojos.FileContents;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
 import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
@@ -39,9 +41,10 @@ public class FileController {
 
     private Connection connection;
     private Configuration configuration;
-    private FileMetadataDao fileMetadataDao;
 
+    private FileMetadataDao fileMetadataDao;
     private FolderMetadataDao folderMetadataDao;
+    private FileContentsDao fileContentsDao;
 
     public FileController(FileDAO fileRepository) {
         this.fileRepository = fileRepository;
@@ -53,6 +56,7 @@ public class FileController {
         configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
         fileMetadataDao = new FileMetadataDao(configuration);
         folderMetadataDao = new FolderMetadataDao(configuration);
+        fileContentsDao = new FileContentsDao(configuration);
 
     }
 
@@ -90,15 +94,11 @@ public class FileController {
         return folder;
     }
 
-    public Object handleMoveFolder(Request request, Response response) {
-        /*try{
-            //gdzie przeniesc ten folder??
-            String folderPath = request.params("path");
-            String newPath = request.queryParams("new_path");
-            return null; //todo
-        } catch (NumberFormatException ex){
-            throw new ParameterFormatException(ex);
-        }*/
+    public Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
+        Path path = Paths.get(request.params("path"));
+        Path newpath = Paths.get(request.params("path"));
+        FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+
         return null;
     }
 
@@ -125,5 +125,33 @@ public class FileController {
             response.status(CREATED);
             return result;
         }
+    }
+
+    public Object handlePostFile(Request request, Response response) {
+        Path path = Paths.get(request.params("path"));
+        String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana 
+        FileMetadata file;
+        FolderMetadata parent;
+        FileMetadata result;
+        Path parentPath = path.getParent();
+        if (parentPath != null) {
+            String lowerPath = parentPath.toString().toLowerCase();
+            parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
+            Timestamp time = new Timestamp(System.currentTimeMillis());
+            file = new FileMetadata(null, path.getFileName().toString(),
+                    path.toString().toLowerCase(), path.toString(), content.length(), time, time, parent.getFolderId());
+            fileMetadataDao.insert(file);
+            result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
+        } else {
+            Timestamp time = new Timestamp(System.currentTimeMillis());
+            file = new FileMetadata(null, path.getFileName().toString(),
+                    path.toString().toLowerCase(), path.toString(), content.length(), time, time, null);
+            fileMetadataDao.insert(file);
+            result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
+        }
+        FileContents fileContents = new FileContents(file.getFileId(),content.getBytes());
+        fileContentsDao.insert(fileContents);
+        response.status(CREATED);
+        return result;
     }
 }
