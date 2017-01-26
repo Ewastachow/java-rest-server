@@ -325,6 +325,7 @@ class FileController {
                 sessionDataDao.delete(session);
                 sessionDataDao.insert(new SessionData(session.getSessionId(), session.getUserId(), time));
             }else {
+                sessionDataDao.delete(session);
                 response.status(401);
                 throw new AuthorizationException();
             }
