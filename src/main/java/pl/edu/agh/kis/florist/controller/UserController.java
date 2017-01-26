@@ -9,6 +9,7 @@ import pl.edu.agh.kis.florist.db.tables.daos.SessionDataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.UsersDao;
 import pl.edu.agh.kis.florist.db.tables.pojos.SessionData;
 import pl.edu.agh.kis.florist.db.tables.pojos.Users;
+import pl.edu.agh.kis.florist.exceptions.AuthorizationException;
 import spark.Request;
 import spark.Response;
 
@@ -58,11 +59,10 @@ class UserController {
             }
             sessionDataDao.insert(sessionData);
             response.status(200);
-            response.cookie("session", sessionData.getSessionId(), 30000);
+            response.cookie("session", sessionData.getSessionId(), 60000);
             return sessionData.getSessionId();
         }else{
-            //// TODO: 26.01.17 Wywala exception że nie uwierzytelniono
-            return null;
+            throw new AuthorizationException();
         }
     }
 

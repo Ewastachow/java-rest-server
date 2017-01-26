@@ -60,23 +60,26 @@ class FileController {
 
         accessAutorisation(request, response);
 
-        if(request.queryParams("recursive").equals(Boolean.toString(true))){
-            //// TODO: 26.01.17 Zaimplementować;
-        }
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
+        FolderMetadata folder;
         try{
-            FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-            folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
-            files.addAll(fileMetadataDao.fetchByEnclosingFolderId(folder.getFolderId()));
-            List<List> result = new ArrayList<>();
-            result.add(files);
-            result.add(folders);
-            return result;
+            folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
         }catch(Exception e) {
             throw new InvalidPathException(path.toString());
         }
+        if(request.queryParams("recursive").equals(Boolean.toString(true))){
+            folders.addAll(getListOfAllFoldersInside(folder.getFolderId()));
+            files.addAll(getListOfAllFilesInListOfFolders(folders, folder.getFolderId()));
+        }else{
+            folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
+            files.addAll(fileMetadataDao.fetchByEnclosingFolderId(folder.getFolderId()));
+        }
+        List<List> result = new ArrayList<>();
+        result.add(files);
+        result.add(folders);
+        return result;
     }
 
     Object handleFolderData(Request request, Response response) {
@@ -141,6 +144,14 @@ class FileController {
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
 
+            FolderMetadata tested2 = null;
+            try{
+                tested2 = folderMetadataDao.fetchByPathLower(newPath.toString()+"/"+folder.getName()).get(0);
+            }catch(Exception e){
+            }
+            if(tested2!=null) throw new InvalidPathException(path.toString());
+
+
             List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
             List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
 
@@ -185,11 +196,20 @@ class FileController {
         FolderMetadata parent;
         Path parentPath = path.getParent();
         if (parentPath != null) {
+
             try{
                 FolderMetadata tested = folderMetadataDao.fetchByPathLower(path.getParent().toString()).get(0);
             }catch(Exception e){
                 throw new InvalidPathException(path.toString());
             }
+
+            FolderMetadata tested2 = null;
+            try{
+                tested2 = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            }catch(Exception e){
+            }
+            if(tested2!=null) throw new InvalidPathException(path.toString());
+
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -200,6 +220,14 @@ class FileController {
             response.status(CREATED);
             return result;
         } else {
+
+            FolderMetadata tested2 = null;
+            try{
+                tested2 = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            }catch(Exception e){
+            }
+            if(tested2!=null) throw new InvalidPathException(path.toString());
+
             Timestamp time = new Timestamp(System.currentTimeMillis());
             FolderMetadata folder = new FolderMetadata(null, path.getFileName().toString(),
                     path.toString().toLowerCase(), path.toString(), null, time);
@@ -226,6 +254,13 @@ class FileController {
             }catch(Exception e){
                 throw new InvalidPathException(path.toString());
             }
+
+            FileMetadata tested2 = null;
+            try{
+                tested2 = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+            }catch(Exception e){}
+            if(tested2!=null) throw new InvalidPathException(path.toString());
+
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -234,6 +269,14 @@ class FileController {
             fileMetadataDao.insert(file);
             result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
         } else {
+
+            FileMetadata tested2 = null;
+            try{
+                tested2 = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+            }catch(Exception e){
+            }
+            if(tested2!=null) throw new InvalidPathException(path.toString());
+
             Timestamp time = new Timestamp(System.currentTimeMillis());
             file = new FileMetadata(null, path.getFileName().toString(),
                     path.toString().toLowerCase(), path.toString(), content.length(), time, time, null);
@@ -252,17 +295,67 @@ class FileController {
 
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
+        int toChange = path.getNameCount();
+        String newPath;
+        Path parentPath = path.getParent();
+        if(parentPath!=null){
+            newPath = path.getParent()+"/"+newName;
+        }else{
+            newPath = newName;
+        }
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+
+            FolderMetadata tested2 = null;
+            try{
+                tested2 = folderMetadataDao.fetchByPathLower(newPath).get(0);
+            }catch(Exception e){
+            }
+            if(tested2!=null) throw new InvalidPathException(path.toString());
+
+            FolderMetadata newFolder = new FolderMetadata(folder.getFolderId(), newName,
+                    newPath, newPath, folder.getParentFolderId(), folder.getServerCreatedAt());
+
+            List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
+            List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
+
+            folderMetadataDao.delete(folder);
+            folderMetadataDao.insert(newFolder);
+
+            for(FolderMetadata i: folders){
+                Path oldPath = Paths.get(i.getPathLower());
+                String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange,oldPath.getNameCount());
+                folderMetadataDao.delete(i);
+                FolderMetadata newI = new FolderMetadata(i.getFolderId(), i.getName(),
+                        newIPathString, newIPathString, i.getParentFolderId(), i.getServerCreatedAt());
+                folderMetadataDao.insert(newI);
+            }
+            for(FileMetadata i : files){
+                Path oldPath = Paths.get(i.getPathLower());
+                String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange,oldPath.getNameCount());
+                Timestamp time = new Timestamp(System.currentTimeMillis());
+                fileMetadataDao.delete(i);
+                FileMetadata newI = new FileMetadata(i.getFileId(), i.getName(),
+                        newIPathString, newIPathString, i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
+                fileMetadataDao.insert(newI);
+            }
+            return newFolder;
             //// TODO: 25.01.17 implement rename for folders -- not necessery
 
         }catch(Exception e){
             try{
                 FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
-                fileMetadataDao.delete(file);
 
                 Path oldPath = Paths.get(file.getPathLower());
-                String newPath = oldPath.getParent()+"/"+newName;
+
+                FileMetadata tested2 = null;
+                try{
+                    tested2 = fileMetadataDao.fetchByPathLower(newPath).get(0);
+                }catch(Exception ex){
+                }
+                if(tested2!=null) throw new InvalidPathException(path.toString());
+
+                fileMetadataDao.delete(file);
 
                 Timestamp time = new Timestamp(System.currentTimeMillis());
                 FileMetadata newFile = new FileMetadata(file.getFileId(), newName, newPath,
@@ -276,7 +369,6 @@ class FileController {
                 throw new InvalidPathException(path.toString());
             }
         }
-        return null;
     }
 
     Object handleDownloadFile(Request request, Response response) {
@@ -320,7 +412,7 @@ class FileController {
             String sessionId = request.cookie("session");
             SessionData session = sessionDataDao.fetchBySessionId(sessionId).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
-            Timestamp latestTime = new Timestamp(session.getLastAccessed().getTime()+5*60*1000);
+            Timestamp latestTime = new Timestamp(session.getLastAccessed().getTime()+60*1000);
             if(time.before(latestTime)){
                 sessionDataDao.delete(session);
                 sessionDataDao.insert(new SessionData(session.getSessionId(), session.getUserId(), time));
