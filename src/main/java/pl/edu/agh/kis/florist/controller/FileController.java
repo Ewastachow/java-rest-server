@@ -106,7 +106,6 @@ class FileController {
 
         accessAutorisation(request, response);
 
-        //// TODO: 26.01.17 Zmienić na void i  response.status(204);
         Path path = Paths.get(request.params("path"));
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
@@ -119,6 +118,7 @@ class FileController {
             }
             for(FolderMetadata i : folders) folderMetadataDao.delete(i);
             folderMetadataDao.delete(folder);
+            response.status(204);
             return folder;
         }catch (Exception e){
             try{
@@ -126,6 +126,7 @@ class FileController {
                 FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
                 fileContentsDao.delete(fileContents);
                 fileMetadataDao.delete(file);
+                response.status(204);
                 return file;
             }catch (Exception ex){
                 throw new InvalidPathException(path.toString());
@@ -340,8 +341,6 @@ class FileController {
                 fileMetadataDao.insert(newI);
             }
             return newFolder;
-            //// TODO: 25.01.17 implement rename for folders -- not necessery
-
         }catch(Exception e){
             try{
                 FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);

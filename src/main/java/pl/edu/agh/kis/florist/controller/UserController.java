@@ -45,13 +45,12 @@ class UserController {
     }
 
     Object handleUserAccess(Request request, Response response) {
-        //Users user = gson.fromJson(request.body(), Users.class); //// TODO: 26.01.17 Z HEADER a nie z BODY
         Users user = new Users(null, request.headers("userName"), request.headers("userName"), request.headers("hashedPassword"));
         Users thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
         if(checkPassword(user.getHashedPassword(), thisUser.getHashedPassword())){
             //thisUser.getHashedPassword().equals(createNewHashedPassword(user.getHashedPassword()))){
             Timestamp time = new Timestamp(System.currentTimeMillis());
-            SessionData sessionData = new SessionData(generateRandomString(10), thisUser.getId(), time);//// TODO: 26.01.17 sesionID jest randomowe
+            SessionData sessionData = new SessionData(generateRandomString(10), thisUser.getId(), time);
             try{
                 SessionData last = sessionDataDao.fetchByUserId(thisUser.getId()).get(0);
                 sessionDataDao.delete(last);
