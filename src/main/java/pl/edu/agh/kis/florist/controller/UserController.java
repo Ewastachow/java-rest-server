@@ -44,14 +44,15 @@ class UserController {
     }
 
     Object handleUserAccess(Request request, Response response) {
-        Users user = gson.fromJson(request.body(), Users.class);
+        Users user = gson.fromJson(request.body(), Users.class); //// TODO: 26.01.17 Z HEADER a nie z BODY
         Users thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
-        if(thisUser.getHashedPassword().equals(createNewHashedPassword(user.getHashedPassword()))){
+        if(checkPassword(user.getHashedPassword(), thisUser.getHashedPassword())){
+            //thisUser.getHashedPassword().equals(createNewHashedPassword(user.getHashedPassword()))){
             Timestamp time = new Timestamp(System.currentTimeMillis());
             SessionData sessionData = new SessionData(null, thisUser.getId(), time);
             sessionDataDao.insert(sessionData);
             response.status(CREATED);
-            return sessionData;
+            return sessionData.getSessionId();
         }else{
             //// TODO: 26.01.17 Wywala exception że nie uwierzytelniono
         }
