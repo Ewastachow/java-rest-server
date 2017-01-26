@@ -17,33 +17,32 @@ import java.sql.SQLException;
 /**
  * Created by yevvye on 16.01.17.
  */
-public class UserController {
-    private final String DB_URL = "jdbc:sqlite:test.db";
+class UserController {
 
     private static final int CREATED = 201;
 
     private Connection connection;
-    private Configuration configuration;
 
     private UsersDao usersDao;
     private final Gson gson = new Gson();
 
-    public UserController() {
+    UserController() {
         try {
+            String DB_URL = "jdbc:sqlite:test.db";
             connection = DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
+        Configuration configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
 
         usersDao = new UsersDao(configuration);
     }
 
-    public Object handleUserAccess(Request request, Response response) {
+    Object handleUserAccess(Request request, Response response) {
         return null;
     }
 
-    public Object handleCreateNewUser(Request request, Response response) {
+    Object handleCreateNewUser(Request request, Response response) {
         Users users = gson.fromJson(request.body(), Users.class);
         Users user = new Users(null,users.getUserName(),users.getUserName(),createNewHashedPassword(users.getHashedPassword()));
         usersDao.insert(user);
@@ -51,11 +50,11 @@ public class UserController {
         return user;
     }
 
-    public static String createNewHashedPassword(String password) {
+    private static String createNewHashedPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public static boolean checkPassword(String candidatePassword,String storedHashedPassword) {
+    private static boolean checkPassword(String candidatePassword,String storedHashedPassword) {
         return BCrypt.checkpw(candidatePassword, storedHashedPassword);
     }
 }

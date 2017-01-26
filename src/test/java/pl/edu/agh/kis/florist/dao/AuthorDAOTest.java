@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.edu.agh.kis.florist.db.tables.records.AuthorsRecord;
-import pl.edu.agh.kis.florist.model.Author;
 
 public class AuthorDAOTest {
 

@@ -21,8 +21,6 @@ import pl.edu.agh.kis.florist.db.tables.pojos.Books;
 import pl.edu.agh.kis.florist.db.tables.records.AuthorBooksRecord;
 import pl.edu.agh.kis.florist.db.tables.records.AuthorsRecord;
 import pl.edu.agh.kis.florist.db.tables.records.BooksRecord;
-import pl.edu.agh.kis.florist.model.Author;
-import pl.edu.agh.kis.florist.model.Book;
 
 public class BookDAOTest {
 

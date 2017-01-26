@@ -1,8 +1,5 @@
 package pl.edu.agh.kis.florist.controller;
 
-import com.google.gson.Gson;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
@@ -13,8 +10,6 @@ import pl.edu.agh.kis.florist.db.tables.pojos.FileContents;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
 import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
-import pl.edu.agh.kis.florist.exceptions.ParameterFormatException;
-import pl.edu.agh.kis.florist.model.*;
 import spark.Request;
 import spark.Response;
 
@@ -31,33 +26,31 @@ import java.util.List;
  * Created by yevvye on 14.01.2017.
  */
 
-public class FileController {
-    private final String DB_URL = "jdbc:sqlite:test.db";
+class FileController {
+
     private static final int CREATED = 201;
 
-    private final Gson gson = new Gson();
-
     private Connection connection;
-    private Configuration configuration;
 
     private FileMetadataDao fileMetadataDao;
     private FolderMetadataDao folderMetadataDao;
     private FileContentsDao fileContentsDao;
 
-    public FileController() {
+    FileController() {
         try {
+            String DB_URL = "jdbc:sqlite:test.db";
             connection = DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
+        Configuration configuration = new DefaultConfiguration().set(connection).set(SQLDialect.SQLITE);
         fileMetadataDao = new FileMetadataDao(configuration);
         folderMetadataDao = new FolderMetadataDao(configuration);
         fileContentsDao = new FileContentsDao(configuration);
 
     }
 
-    public Object handleFolderContent(Request request, Response response) {
+    Object handleFolderContent(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
@@ -74,7 +67,7 @@ public class FileController {
         }
     }
 
-    public Object handleFolderData(Request request, Response response) {
+    Object handleFolderData(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
         try{
@@ -91,7 +84,8 @@ public class FileController {
         }
     }
 
-    public Object handleDeleteFolder(Request request, Response response) {
+    Object handleDeleteFolder(Request request, Response response) {
+        //// TODO: 26.01.17 Zmienić na void i  response.status(204);
         Path path = Paths.get(request.params("path"));
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
@@ -118,7 +112,7 @@ public class FileController {
         }
     }
 
-    public Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
+    Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
         Path path = Paths.get(request.params("path"));
         Path newPath = Paths.get(request.queryParams("new_path"));
         int toChange = path.getNameCount();
@@ -157,11 +151,12 @@ public class FileController {
             return newFolder;
 
         }catch(Exception e){
+            response.status(405);
             throw new InvalidPathException(path.toString()+" nope");
         }
     }
 
-    public Object handleCreateFolder(Request request, Response response) {
+    Object handleCreateFolder(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
         Path parentPath = path.getParent();
@@ -191,7 +186,7 @@ public class FileController {
         }
     }
 
-    public Object handlePostFile(Request request, Response response) {
+    Object handleUploadFile(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
         FileMetadata file;
@@ -224,7 +219,7 @@ public class FileController {
         return result;
     }
 
-    public Object handleRenameFolder(Request request, Response response) {
+    Object handleRenameFolder(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
         try{
@@ -255,7 +250,7 @@ public class FileController {
         return null;
     }
 
-    public Object handleDownloadFile(Request request, Response response) {
+    Object handleDownloadFile(Request request, Response response) {
         Path path = Paths.get(request.params("path"));
         try{
             FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);

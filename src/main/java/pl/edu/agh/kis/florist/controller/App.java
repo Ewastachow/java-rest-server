@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import pl.edu.agh.kis.florist.dao.AuthorDAO;
-import pl.edu.agh.kis.florist.dao.BookDAO;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import pl.edu.agh.kis.florist.exceptions.ParameterFormatException;
 import pl.edu.agh.kis.florist.model.ParameterFormatError;
@@ -24,26 +22,19 @@ public class App {
 
 	public static void main(String[] args) {
 
-		final String AUTHORS_PATH = "/authors";
-		final String BOOKS_PATH = "/books";
-		final String BOOK_PATH = "/books/:bookid";
-
 		final String FOLDER_CONTENT_PATH = "/files/:path/list_folder_content";
 		final String FOLDER_PATH = "/files/:path/get_meta_data";
 		final String FOLDER_DELETE_PATH = "/files/:path/delete";
 		final String FOLDER_MOVE_PATH = "/files/:path/move";
 		final String FOLDER_CREATE_PATH = "/files/:path/create_directory";
 		final String FOLDER_RENAME_PATH = "/files/:path/rename";
-		final String FILE_POST_PATH = "/files/:path/upload";
+		final String FILE_UPLOAD_PATH = "/files/:path/upload";
 		final String FILE_DOWNLOAD_PATH = "/files/:path/download";
 
 		final String USER_CREATE_PATH = "/users/create_user";
 		final String USER_ACCESS_PATH = "/users/access";
 
-
-
 		final FileController fileController = new FileController();
-		final BookController bookController = new BookController(new AuthorDAO(),new BookDAO());
 		final UserController userController = new UserController();
 
 		final Gson gson = new Gson();
@@ -58,74 +49,31 @@ public class App {
 			info(req);
 		});
 
-		//__________BOOKS_&_AUTHORS__________
 
-		get(AUTHORS_PATH, (request, response) -> {
-			return bookController.handleAllAuthors(request, response);
-		}, json);
+        get(FOLDER_PATH, fileController::handleFolderData, json);
 
-		post(AUTHORS_PATH, (request, response) -> {
-			return bookController.handleCreateNewAuthor(request,response);
-		}, json);
+		get(FOLDER_CONTENT_PATH, fileController::handleFolderContent, json);
 
-		get(BOOKS_PATH, (request, response) -> {
-			return bookController.hadleAllBooks(request,response);
-		}, json);
+        put(FOLDER_CREATE_PATH, fileController::handleCreateFolder, json);
 
-		get(BOOK_PATH, (request, response) -> {
-			return bookController.handleSingleBook(request,response);
-		}, json);
+		put(FOLDER_MOVE_PATH, fileController::handleMoveFolder, json);
 
+		put(FOLDER_RENAME_PATH, fileController::handleRenameFolder, json);
+
+        delete(FOLDER_DELETE_PATH, fileController::handleDeleteFolder, json);
+
+        post(FILE_UPLOAD_PATH, "multipart/form-data", fileController::handleUploadFile, json);
+
+		get(FILE_DOWNLOAD_PATH, fileController::handleDownloadFile, json);
 
 
-
-//		__________FOLDERS_&_FILES__________
-
-		get(FOLDER_CONTENT_PATH, (request, response) -> {
-			return fileController.handleFolderContent(request,response);
-		}, json);
-
-		get(FOLDER_PATH, (request, response) -> {
-			return fileController.handleFolderData(request,response);
-		}, json);
-
-		delete(FOLDER_DELETE_PATH, (request, response) -> {
-			return fileController.handleDeleteFolder(request,response);
-		}, json);
-
-		put(FOLDER_MOVE_PATH, (request, response) -> {
-			return fileController.handleMoveFolder(request,response);
-		}, json);
-
-		put(FOLDER_CREATE_PATH, (request, response) -> {
-			return fileController.handleCreateFolder(request,response);
-		}, json);
-
-		post(FILE_POST_PATH, "multipart/form-data", (request, response) -> {
-			return fileController.handlePostFile(request,response);
-		}, json);
-
-		put(FOLDER_RENAME_PATH, (request, response) -> {
-			return fileController.handleRenameFolder(request,response);
-		}, json);
-
-		get(FILE_DOWNLOAD_PATH, (request, response) -> {
-			return fileController.handleDownloadFile(request,response);
-		}, json);
-
-//		__________USER__________
-
-		post(USER_CREATE_PATH, "multipart/form-data", (request, response) -> {
-			return userController.handleCreateNewUser(request,response);
-		}, json);
+		post(USER_CREATE_PATH, "multipart/form-data", userController::handleCreateNewUser, json);
 
 		get(USER_ACCESS_PATH, (request, response) -> {
 			return userController.handleUserAccess(request,response);
 		}, json);
 
 
-
-//		__________EXCEPTIONS__________
 		exception(ParameterFormatException.class,(ex,request,response) -> {
 			response.status(403);
 			response.body(gson.toJson(new ParameterFormatError(request.params())));
@@ -133,8 +81,9 @@ public class App {
 
 		exception(InvalidPathException.class,(ex, request, response) -> {
 			response.status(405);
-//			response.body(gson.toJson(new ParameterFormatError(request.params()))); // TODO: 25.01.17 Zaimplementować tu ale nie wiem co
-		});
+            // TODO: 25.01.17 Zaimplementować tu ale nie wiem co
+//			response.body(gson.toJson(new ParameterFormatError(request.params())));
+ 		});
 
 		exception(Exception.class,(ex,req,res)-> {
 			System.err.println(String.format("format: %s",req.uri()));
