@@ -57,7 +57,7 @@ class FileController {
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
             folders.addAll(folderMetadataDao.fetchByParentFolderId(folder.getFolderId()));
-            files.addAll(fileMetadataDao.fetchByParentFolderId(folder.getFolderId()));
+            files.addAll(fileMetadataDao.fetchByEnclosingFolderId(folder.getFolderId()));
             List<List> result = new ArrayList<>();
             result.add(files);
             result.add(folders);
@@ -145,7 +145,7 @@ class FileController {
 
                 fileMetadataDao.delete(i);
                 FileMetadata newI = new FileMetadata(i.getFileId(), i.getName(),
-                        newIPathString, newIPathString, i.getParentFolderId(), i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
+                        newIPathString, newIPathString, i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
                 fileMetadataDao.insert(newI);
             }
             return newFolder;
@@ -203,13 +203,13 @@ class FileController {
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
             Timestamp time = new Timestamp(System.currentTimeMillis());
             file = new FileMetadata(null, path.getFileName().toString(),
-                    path.toString().toLowerCase(), path.toString(), parent.getFolderId(), content.length(), time, time, parent.getFolderId());
+                    path.toString().toLowerCase(), path.toString(), content.length(), time, time, parent.getFolderId());
             fileMetadataDao.insert(file);
             result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
         } else {
             Timestamp time = new Timestamp(System.currentTimeMillis());
             file = new FileMetadata(null, path.getFileName().toString(),
-                    path.toString().toLowerCase(), path.toString(), null, content.length(), time, time, null);
+                    path.toString().toLowerCase(), path.toString(), content.length(), time, time, null);
             fileMetadataDao.insert(file);
             result = fileMetadataDao.fetchByPathLower(path.toString().toLowerCase()).get(0);
         }
@@ -236,7 +236,7 @@ class FileController {
 
                 Timestamp time = new Timestamp(System.currentTimeMillis());
                 FileMetadata newFile = new FileMetadata(file.getFileId(), newName, newPath,
-                        newPath, file.getParentFolderId(), file.getSize(), file.getServerCreatedAt(), time, file.getEnclosingFolderId());
+                        newPath, file.getSize(), file.getServerCreatedAt(), time, file.getEnclosingFolderId());
 
                 fileMetadataDao.insert(newFile);
                 response.status(CREATED);
@@ -245,7 +245,6 @@ class FileController {
             }catch(Exception ex){
                 throw new InvalidPathException(path.toString()+" not exist");
             }
-
         }
         return null;
     }
@@ -277,9 +276,9 @@ class FileController {
     private List<FileMetadata> getListOfAllFilesInListOfFolders(List<FolderMetadata> folders, int folderId){
         List<FileMetadata> list = new ArrayList<>();
         for(FolderMetadata i : folders){
-            list.addAll(fileMetadataDao.fetchByParentFolderId(i.getFolderId()));
+            list.addAll(fileMetadataDao.fetchByEnclosingFolderId(i.getFolderId()));
         }
-        list.addAll(fileMetadataDao.fetchByParentFolderId(folderId));
+        list.addAll(fileMetadataDao.fetchByEnclosingFolderId(folderId));
         return list;
     }
 }
