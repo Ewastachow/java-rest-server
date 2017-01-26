@@ -44,19 +44,26 @@ class UserController {
     }
 
     Object handleUserAccess(Request request, Response response) {
-        Users user = gson.fromJson(request.body(), Users.class); //// TODO: 26.01.17 Z HEADER a nie z BODY
+        //Users user = gson.fromJson(request.body(), Users.class); //// TODO: 26.01.17 Z HEADER a nie z BODY
+        Users user = new Users(null, request.headers("userName"), request.headers("userName"), request.headers("hashedPassword"));
         Users thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
         if(checkPassword(user.getHashedPassword(), thisUser.getHashedPassword())){
             //thisUser.getHashedPassword().equals(createNewHashedPassword(user.getHashedPassword()))){
             Timestamp time = new Timestamp(System.currentTimeMillis());
-            SessionData sessionData = new SessionData(null, thisUser.getId(), time);
+            SessionData sessionData = new SessionData(generateRandomString(10), thisUser.getId(), time);//// TODO: 26.01.17 sesionID jest randomowe
+            try{
+                SessionData last = sessionDataDao.fetchByUserId(thisUser.getId()).get(0);
+                sessionDataDao.delete(last);
+            }catch (Exception e){
+            }
             sessionDataDao.insert(sessionData);
-            response.status(CREATED);
+            response.status(200);
+            response.cookie("session", sessionData.getSessionId(), 30000);
             return sessionData.getSessionId();
         }else{
             //// TODO: 26.01.17 Wywala exception że nie uwierzytelniono
+            return null;
         }
-        return null;
     }
 
     Object handleCreateNewUser(Request request, Response response) {
@@ -73,5 +80,13 @@ class UserController {
 
     private static boolean checkPassword(String candidatePassword,String storedHashedPassword) {
         return BCrypt.checkpw(candidatePassword, storedHashedPassword);
+    }
+
+    private String generateRandomString(int len){
+        char[] str = new char[100];
+        for (int i = 0; i < len; i++){
+            str[i] = (char) (((int)(Math.random() * 26)) + (int)'A');
+        }
+        return (new String(str, 0, len));
     }
 }

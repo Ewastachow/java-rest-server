@@ -6,9 +6,12 @@ import org.jooq.impl.DefaultConfiguration;
 import pl.edu.agh.kis.florist.db.tables.daos.FileContentsDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
+import pl.edu.agh.kis.florist.db.tables.daos.SessionDataDao;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileContents;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
 import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
+import pl.edu.agh.kis.florist.db.tables.pojos.SessionData;
+import pl.edu.agh.kis.florist.exceptions.AuthorizationException;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import spark.Request;
 import spark.Response;
@@ -20,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,6 +39,7 @@ class FileController {
     private FileMetadataDao fileMetadataDao;
     private FolderMetadataDao folderMetadataDao;
     private FileContentsDao fileContentsDao;
+    private SessionDataDao sessionDataDao;
 
     FileController() {
         try {
@@ -47,10 +52,17 @@ class FileController {
         fileMetadataDao = new FileMetadataDao(configuration);
         folderMetadataDao = new FolderMetadataDao(configuration);
         fileContentsDao = new FileContentsDao(configuration);
+        sessionDataDao = new SessionDataDao(configuration);
 
     }
 
     Object handleFolderContent(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
+        if(request.queryParams("recursive").equals(Boolean.toString(true))){
+            //// TODO: 26.01.17 Zaimplementować;
+        }
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
@@ -63,11 +75,14 @@ class FileController {
             result.add(folders);
             return result;
         }catch(Exception e) {
-            throw new InvalidPathException(path.toString()+" not exist");
+            throw new InvalidPathException(path.toString());
         }
     }
 
     Object handleFolderData(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
         try{
@@ -79,12 +94,15 @@ class FileController {
                 foundedFile = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
                 return foundedFile;
             }catch (Exception ex){
-                throw new InvalidPathException(path.toString()+" not found");
+                throw new InvalidPathException(path.toString());
             }
         }
     }
 
     Object handleDeleteFolder(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         //// TODO: 26.01.17 Zmienić na void i  response.status(204);
         Path path = Paths.get(request.params("path"));
         try{
@@ -107,12 +125,15 @@ class FileController {
                 fileMetadataDao.delete(file);
                 return file;
             }catch (Exception ex){
-                throw new InvalidPathException(path.toString()+" not exist");
+                throw new InvalidPathException(path.toString());
             }
         }
     }
 
-    Object handleMoveFolder(Request request, Response response) { //// TODO: 25.01.17 Zaimplementować - nie ma nic :<<
+    Object handleMoveFolder(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         Path path = Paths.get(request.params("path"));
         Path newPath = Paths.get(request.queryParams("new_path"));
         int toChange = path.getNameCount();
@@ -152,11 +173,14 @@ class FileController {
 
         }catch(Exception e){
             response.status(405);
-            throw new InvalidPathException(path.toString()+" nope");
+            throw new InvalidPathException(path.toString());
         }
     }
 
     Object handleCreateFolder(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
         Path parentPath = path.getParent();
@@ -164,7 +188,7 @@ class FileController {
             try{
                 FolderMetadata tested = folderMetadataDao.fetchByPathLower(path.getParent().toString()).get(0);
             }catch(Exception e){
-                throw new InvalidPathException(path.toString()+" cant exist");
+                throw new InvalidPathException(path.toString());
             }
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
@@ -187,6 +211,9 @@ class FileController {
     }
 
     Object handleUploadFile(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
         FileMetadata file;
@@ -197,7 +224,7 @@ class FileController {
             try{
                 FolderMetadata tested = folderMetadataDao.fetchByPathLower(path.getParent().toString()).get(0);
             }catch(Exception e){
-                throw new InvalidPathException(path.toString()+" cant exist");
+                throw new InvalidPathException(path.toString());
             }
             String lowerPath = parentPath.toString().toLowerCase();
             parent = folderMetadataDao.fetchByPathLower(lowerPath).get(0);
@@ -220,6 +247,9 @@ class FileController {
     }
 
     Object handleRenameFolder(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
         try{
@@ -243,22 +273,25 @@ class FileController {
                 return newFile;
 
             }catch(Exception ex){
-                throw new InvalidPathException(path.toString()+" not exist");
+                throw new InvalidPathException(path.toString());
             }
         }
         return null;
     }
 
     Object handleDownloadFile(Request request, Response response) {
+
+        accessAutorisation(request, response);
+
         Path path = Paths.get(request.params("path"));
         try{
             FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
             FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
-
+            response.body(Arrays.toString(fileContents.getContents()));
             return fileContents.getContents();//// TODO: 25.01.17 Czy to jest poprawne???
 
         }catch(Exception e){
-            throw new InvalidPathException(path.toString()+" file not exist");
+            throw new InvalidPathException(path.toString());
         }
     }
 
@@ -280,5 +313,24 @@ class FileController {
         }
         list.addAll(fileMetadataDao.fetchByEnclosingFolderId(folderId));
         return list;
+    }
+
+    private void accessAutorisation(Request request, Response response){
+        try{
+            String sessionId = request.cookie("session");
+            SessionData session = sessionDataDao.fetchBySessionId(sessionId).get(0);
+            Timestamp time = new Timestamp(System.currentTimeMillis());
+            Timestamp latestTime = new Timestamp(session.getLastAccessed().getTime()+5*60*1000);
+            if(time.before(latestTime)){
+                sessionDataDao.delete(session);
+                sessionDataDao.insert(new SessionData(session.getSessionId(), session.getUserId(), time));
+            }else {
+                response.status(401);
+                throw new AuthorizationException();
+            }
+        }catch(Exception e) {
+            response.status(401);
+            throw new AuthorizationException();
+        }
     }
 }
