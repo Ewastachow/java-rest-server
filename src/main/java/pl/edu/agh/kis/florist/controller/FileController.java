@@ -161,86 +161,158 @@ public class FileController {
         Path path = Paths.get(request.params("path"));
         Path newPath = Paths.get(request.queryParams("new_path"));
         int toChange = path.getNameCount();
-
-        try{
-            FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
-            FolderMetadata newParent = null;
-
+        if(!newPath.toString().equals("")){
             try{
-                newParent = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
-            }catch(Exception e){
-                throw new InvalidPathException(path.toString());
-            }
-            FolderMetadata tested2 = null;
-            try{
-                tested2 = folderMetadataDao.fetchByPathLower(newPath.toString()+"/"+folder.getName()).get(0);
-            }catch(Exception e){
-            }
-            if(tested2!=null) throw new InvalidPathException(path.toString());
-
-
-            List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
-            List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
-
-            folderMetadataDao.delete(folder);
-            FolderMetadata newFolder = new FolderMetadata(folder.getFolderId(), folder.getName(),
-                    newPath.toString()+"/"+folder.getName(), newPath.toString()+"/"+folder.getName(), newParent.getFolderId(), folder.getServerCreatedAt());
-            folderMetadataDao.insert(newFolder);
-
-            for(FolderMetadata i: folders){
-                Path oldPath = Paths.get(i.getPathLower());
-                String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange-1,oldPath.getNameCount());
-
-                folderMetadataDao.delete(i);
-                FolderMetadata newI = new FolderMetadata(i.getFolderId(), i.getName(),
-                        newIPathString, newIPathString, i.getParentFolderId(), i.getServerCreatedAt());
-                folderMetadataDao.insert(newI);
-            }
-            for(FileMetadata i : files){
-                Path oldPath = Paths.get(i.getPathLower());
-                String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange-1,oldPath.getNameCount());
-
-                Timestamp time = new Timestamp(System.currentTimeMillis());
-
-                fileMetadataDao.delete(i);
-                FileMetadata newI = new FileMetadata(i.getFileId(), i.getName(),
-                        newIPathString, newIPathString, i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
-                fileMetadataDao.insert(newI);
-            }
-            return newFolder;
-
-        }catch(Exception e){ //// TODO: 27.01.17 Test moving files & folders
-            try{
-                FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+                FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
                 FolderMetadata newParent = null;
-
-                String newPathString = newPath.toString()+"/"+file.getName();
 
                 try{
                     newParent = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
-                }catch(Exception ex){
+                }catch(Exception e){
                     throw new InvalidPathException(path.toString());
                 }
-                FileMetadata tested2 = null;
+                FolderMetadata tested2 = null;
                 try{
-                    tested2 = fileMetadataDao.fetchByPathLower(newPathString).get(0);
-                }catch(Exception ex){
+                    tested2 = folderMetadataDao.fetchByPathLower(newPath.toString()+"/"+folder.getName()).get(0);
+                }catch(Exception e){
                 }
                 if(tested2!=null) throw new InvalidPathException(path.toString());
 
-                fileMetadataDao.delete(file);
 
-                Timestamp time = new Timestamp(System.currentTimeMillis());
-                FileMetadata newFile = new FileMetadata(file.getFileId(), file.getName(), newPathString,
-                        newPathString, file.getSize(), file.getServerCreatedAt(), time, newParent.getFolderId());
+                List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
+                List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
 
-                fileMetadataDao.insert(newFile);
-                response.status(CREATED);
-                return newFile;
+                folderMetadataDao.delete(folder);
+                FolderMetadata newFolder = new FolderMetadata(folder.getFolderId(), folder.getName(),
+                        newPath.toString()+"/"+folder.getName(), newPath.toString()+"/"+folder.getName(), newParent.getFolderId(), folder.getServerCreatedAt());
+                folderMetadataDao.insert(newFolder);
 
-            }catch (Exception ex){
-                response.status(405);
-                throw new InvalidPathException(path.toString());
+                for(FolderMetadata i: folders){
+                    Path oldPath = Paths.get(i.getPathLower());
+                    String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange-1,oldPath.getNameCount());
+
+                    folderMetadataDao.delete(i);
+                    FolderMetadata newI = new FolderMetadata(i.getFolderId(), i.getName(),
+                            newIPathString, newIPathString, i.getParentFolderId(), i.getServerCreatedAt());
+                    folderMetadataDao.insert(newI);
+                }
+                for(FileMetadata i : files){
+                    Path oldPath = Paths.get(i.getPathLower());
+                    String newIPathString = newPath.toString()+"/"+oldPath.subpath(toChange-1,oldPath.getNameCount());
+
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+
+                    fileMetadataDao.delete(i);
+                    FileMetadata newI = new FileMetadata(i.getFileId(), i.getName(),
+                            newIPathString, newIPathString, i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
+                    fileMetadataDao.insert(newI);
+                }
+                return newFolder;
+
+            }catch(Exception e) { //// TODO: 27.01.17 Test moving files & folders
+                try {
+                    FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+                    FolderMetadata newParent = null;
+
+                    String newPathString = newPath.toString() + "/" + file.getName();
+
+                    try {
+                        newParent = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
+                    } catch (Exception ex) {
+                        throw new InvalidPathException(path.toString());
+                    }
+                    FileMetadata tested2 = null;
+                    try {
+                        tested2 = fileMetadataDao.fetchByPathLower(newPathString).get(0);
+                    } catch (Exception ex) {
+                    }
+                    if (tested2 != null) throw new InvalidPathException(path.toString());
+
+                    fileMetadataDao.delete(file);
+
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+                    FileMetadata newFile = new FileMetadata(file.getFileId(), file.getName(), newPathString,
+                            newPathString, file.getSize(), file.getServerCreatedAt(), time, newParent.getFolderId());
+
+                    fileMetadataDao.insert(newFile);
+                    response.status(CREATED);
+                    return newFile;
+
+                } catch (Exception ex) {
+                    response.status(405);
+                    throw new InvalidPathException(path.toString());
+                }
+            }
+        }else{
+
+            try{
+                FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+
+                FolderMetadata tested2 = null;
+                try{
+                    tested2 = folderMetadataDao.fetchByPathLower(newPath.toString()+"/"+folder.getName()).get(0);
+                }catch(Exception e){
+                }
+                if(tested2!=null) throw new InvalidPathException(path.toString());
+
+                List<FolderMetadata> folders = getListOfAllFoldersInside(folder.getFolderId());
+                List<FileMetadata> files = getListOfAllFilesInListOfFolders(folders, folder.getFolderId());
+
+                folderMetadataDao.delete(folder);
+                FolderMetadata newFolder = new FolderMetadata(folder.getFolderId(), folder.getName(),
+                        folder.getName(), folder.getName(), null, folder.getServerCreatedAt());
+                folderMetadataDao.insert(newFolder);
+
+
+                for(FolderMetadata i: folders){
+                    Path oldPath = Paths.get(i.getPathLower());
+                    String newIPathString = oldPath.subpath(toChange-1,oldPath.getNameCount()).toString();
+
+                    FolderMetadata newI = new FolderMetadata(i.getFolderId(), i.getName(),
+                            newIPathString, newIPathString, i.getParentFolderId(), i.getServerCreatedAt());
+                    folderMetadataDao.delete(i);
+                    folderMetadataDao.insert(newI);
+                }
+
+                for(FileMetadata i : files){
+                    Path oldPath = Paths.get(i.getPathLower());
+                    String newIPathString = oldPath.subpath(toChange-1,oldPath.getNameCount()).toString();
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+
+                    FileMetadata newI = new FileMetadata(i.getFileId(), i.getName(),
+                            newIPathString, newIPathString, i.getSize(), i.getServerCreatedAt(), time, i.getEnclosingFolderId());
+                    fileMetadataDao.delete(i);
+                    fileMetadataDao.insert(newI);
+                }
+                return newFolder;
+
+            }catch(Exception e){ //// TODO: 27.01.17 Test moving files & folders
+                try{
+                    FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+
+                    String newPathString = file.getName();
+
+                    FileMetadata tested2 = null;
+                    try{
+                        tested2 = fileMetadataDao.fetchByPathLower(newPathString).get(0);
+                    }catch(Exception ex){
+                    }
+                    if(tested2!=null) throw new InvalidPathException(path.toString());
+
+                    fileMetadataDao.delete(file);
+
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+                    FileMetadata newFile = new FileMetadata(file.getFileId(), file.getName(), newPathString,
+                            newPathString, file.getSize(), file.getServerCreatedAt(), time, null);
+
+                    fileMetadataDao.insert(newFile);
+                    response.status(CREATED);
+                    return newFile;
+
+                }catch (Exception ex){
+                    response.status(405);
+                    throw new InvalidPathException(path.toString());
+                }
             }
         }
     }
