@@ -57,7 +57,6 @@ public class App {
 			userController.accessAutorisation(req, res);
 		});
 
-
         get(FOLDER_PATH, fileController::handleFolderData, json);
 
 		get(FOLDER_CONTENT_PATH, fileController::handleFolderContent, json);
@@ -78,22 +77,17 @@ public class App {
 
 		get(USER_ACCESS_PATH, userController::handleUserAccess, json);
 
-		exception(ParameterFormatException.class,(ex,request,response) -> {
-			response.status(403);
-			response.body(gson.toJson(new ParameterFormatError(request.params())));
-		});
-
-		exception(AuthorizationException.class,(ex, request, response) -> {
+		exception(AuthorizationException.class, (ex, request, response) -> {
 			response.status(403);
 			response.body(gson.toJson(new AuthorizationError(request.params())));
 		});
 
-		exception(InvalidUserNameException.class,(ex, request, response) -> {
+		exception(InvalidUserNameException.class, (ex, request, response) -> {
 			response.status(400);
 			response.body(gson.toJson(new InvalidUserNameError(request.params())));
 		});
 
-		exception(InvalidPathException.class,(ex, request, response) -> {
+		exception(InvalidPathException.class, (ex, request, response) -> {
 			response.status(405);
 			response.body(gson.toJson(new InvalidPathError(request.params())));
  		});
@@ -106,7 +100,6 @@ public class App {
 			System.err.println(String.format("body: %s",req.body()));
 			ex.printStackTrace();
 		});
-
 	}
 
 	private static void info(Request req) {

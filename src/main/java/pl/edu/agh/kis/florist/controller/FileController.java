@@ -6,12 +6,9 @@ import org.jooq.impl.DefaultConfiguration;
 import pl.edu.agh.kis.florist.db.tables.daos.FileContentsDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
-import pl.edu.agh.kis.florist.db.tables.daos.SessionDataDao;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileContents;
 import pl.edu.agh.kis.florist.db.tables.pojos.FileMetadata;
 import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
-import pl.edu.agh.kis.florist.db.tables.pojos.SessionData;
-import pl.edu.agh.kis.florist.exceptions.AuthorizationException;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import spark.Request;
 import spark.Response;
@@ -42,7 +39,6 @@ class FileController {
     private FileMetadataDao fileMetadataDao;
     private FolderMetadataDao folderMetadataDao;
     private FileContentsDao fileContentsDao;
-//    private SessionDataDao sessionDataDao;
 
     /**
      * Controller no parameter constructor
@@ -59,7 +55,6 @@ class FileController {
         fileMetadataDao = new FileMetadataDao(configuration);
         folderMetadataDao = new FolderMetadataDao(configuration);
         fileContentsDao = new FileContentsDao(configuration);
-//        sessionDataDao = new SessionDataDao(configuration);
 
     }
 
@@ -72,8 +67,6 @@ class FileController {
      * @return List of FileMetadata & FoderMetadata
      */
     Object handleFolderContent(Request request, Response response) {
-
-//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
@@ -105,8 +98,6 @@ class FileController {
      */
     Object handleFolderData(Request request, Response response) {
 
-//        accessAutorisation(request, response);
-
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
         try{
@@ -130,8 +121,6 @@ class FileController {
      * @return FolderMetadata or FileMetadata object
      */
     Object handleDeleteFolder(Request request, Response response) {
-
-//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         try{
@@ -168,8 +157,6 @@ class FileController {
      * @return FolderMetadata or FileMetadata object
      */
     Object handleMoveFolder(Request request, Response response) {
-
-//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         Path newPath = Paths.get(request.queryParams("new_path"));
@@ -264,8 +251,6 @@ class FileController {
      */
     Object handleCreateFolder(Request request, Response response) {
 
-//        accessAutorisation(request, response);
-
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
         Path parentPath = path.getParent();
@@ -319,8 +304,6 @@ class FileController {
      * @return FileMetadata object
      */
     Object handleUploadFile(Request request, Response response) {
-
-//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
@@ -376,8 +359,6 @@ class FileController {
      * @return FolderMetadata or FileMetadata object
      */
     Object handleRenameFolder(Request request, Response response) {
-
-//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
@@ -463,8 +444,6 @@ class FileController {
      */
     Object handleDownloadFile(Request request, Response response) {
 
-//        accessAutorisation(request, response);
-
         Path path = Paths.get(request.params("path"));
         try{
             FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
@@ -496,5 +475,4 @@ class FileController {
         list.addAll(fileMetadataDao.fetchByEnclosingFolderId(folderId));
         return list;
     }
-
 }

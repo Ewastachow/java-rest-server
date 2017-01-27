@@ -92,6 +92,11 @@ class UserController {
         return user;
     }
 
+    /**
+     * Method checking rights to access to /files
+     * @param request REST obtained request - needed cookie "session"
+     * @param response REST regived response
+     */
     void accessAutorisation(Request request, Response response){
         try{
             String sessionId = request.cookie("session");
