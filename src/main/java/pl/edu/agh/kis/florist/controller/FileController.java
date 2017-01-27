@@ -1,8 +1,10 @@
 package pl.edu.agh.kis.florist.controller;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamWriterFactory;
 import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
+import org.sqlite.SQLiteConfig;
 import pl.edu.agh.kis.florist.db.tables.daos.FileContentsDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
@@ -22,6 +24,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.time.temporal.WeekFields.ISO;
 
 /**
  * Class controling using database for Files and Folders
@@ -380,7 +384,7 @@ public class FileController {
     public Object handleUploadFile(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
-        String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
+        String content = request.body();
         FileMetadata file;
         FolderMetadata parent;
         FileMetadata result;
@@ -522,8 +526,9 @@ public class FileController {
         try{
             FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
             FileContents fileContents = fileContentsDao.fetchOneByFileId(file.getFileId());
-            response.body(Arrays.toString(fileContents.getContents()));
-            return fileContents.getContents();//// TODO: 25.01.17 Czy to jest poprawne???
+            String result = new String(fileContents.getContents());
+            response.body(result);
+            return result;
 
         }catch(Exception e){
             throw new InvalidPathException(path.toString());
