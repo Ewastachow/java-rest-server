@@ -27,9 +27,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by yevvye on 14.01.2017.
+ * Class controling using database for Files & Folders
+ * Authorisation needed in cookies "session"
+ * @author EwaStachow
+ * @version v2.0
+ * @exception/@throws InvalidPathException, AuthorizationException
  */
-
 class FileController {
 
     private static final int CREATED = 201;
@@ -42,7 +45,7 @@ class FileController {
     private SessionDataDao sessionDataDao;
 
     /**
-     * FileController no parameter constructor
+     * Controller no parameter constructor
      * It's setting needed daos with configuration
      */
     FileController() {

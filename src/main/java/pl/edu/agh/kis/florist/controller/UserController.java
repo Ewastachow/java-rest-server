@@ -19,7 +19,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
- * Created by yevvye on 16.01.17.
+ * Class controling using database for users
+ * @author EwaStachow
+ * @version v2.0
+ * @exception/@throws InvalidUserNameException, AuthorizationException
  */
 class UserController {
 
@@ -31,6 +34,10 @@ class UserController {
     private SessionDataDao sessionDataDao;
     private final Gson gson = new Gson();
 
+    /**
+     * Controller no parameter constructor
+     * It's setting needed daos with configuration
+     */
     UserController() {
         try {
             String DB_URL = "jdbc:sqlite:test.db";
@@ -44,6 +51,12 @@ class UserController {
         sessionDataDao = new SessionDataDao(configuration);
     }
 
+    /**
+     * Method checking rights to access and seting it
+     * @param request REST obtained request - needed headers "userName" & "hashedPassword"
+     * @param response REST regived response status 200 & cookie "session
+     * @return String -> authorisation session id
+     */
     Object handleUserAccess(Request request, Response response) {
         Users user = new Users(null, request.headers("userName"), request.headers("userName"), request.headers("hashedPassword"));
         Users thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
@@ -65,6 +78,12 @@ class UserController {
         }
     }
 
+    /**
+     * Method creating new user
+     * @param request REST obtained request - needed Json body with user_name and user_pass
+     * @param response REST regived response
+     * @return Users object
+     */
     Object handleCreateNewUser(Request request, Response response) {
         Users users = gson.fromJson(request.body(), Users.class);
         Users user = new Users(null,users.getUserName(),users.getUserName(),createNewHashedPassword(users.getHashedPassword()));
