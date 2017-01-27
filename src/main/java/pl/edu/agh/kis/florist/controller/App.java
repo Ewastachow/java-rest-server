@@ -13,11 +13,9 @@ import com.google.gson.Gson;
 import pl.edu.agh.kis.florist.exceptions.AuthorizationException;
 import pl.edu.agh.kis.florist.exceptions.InvalidPathException;
 import pl.edu.agh.kis.florist.exceptions.InvalidUserNameException;
-import pl.edu.agh.kis.florist.exceptions.ParameterFormatException;
 import pl.edu.agh.kis.florist.model.AuthorizationError;
 import pl.edu.agh.kis.florist.model.InvalidPathError;
 import pl.edu.agh.kis.florist.model.InvalidUserNameError;
-import pl.edu.agh.kis.florist.model.ParameterFormatError;
 import spark.Request;
 import spark.ResponseTransformer;
 

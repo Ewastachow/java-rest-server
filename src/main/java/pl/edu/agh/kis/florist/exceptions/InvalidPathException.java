@@ -7,7 +7,6 @@ public class InvalidPathException extends RuntimeException {
     private String folderPath;
 
     public InvalidPathException(String folderPath) {
-
         this.folderPath = folderPath;
     }
 }
