@@ -5,8 +5,8 @@ package pl.edu.agh.kis.florist.exceptions;
  */
 public class InvalidUserNameException extends RuntimeException {
 
-    public InvalidUserNameException(NumberFormatException ex) {
-        super(ex);
+    public InvalidUserNameException() {
+        ;
     }
 
 }

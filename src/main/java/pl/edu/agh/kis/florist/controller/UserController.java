@@ -10,6 +10,7 @@ import pl.edu.agh.kis.florist.db.tables.daos.UsersDao;
 import pl.edu.agh.kis.florist.db.tables.pojos.SessionData;
 import pl.edu.agh.kis.florist.db.tables.pojos.Users;
 import pl.edu.agh.kis.florist.exceptions.AuthorizationException;
+import pl.edu.agh.kis.florist.exceptions.InvalidUserNameException;
 import spark.Request;
 import spark.Response;
 
@@ -59,7 +60,12 @@ public class UserController {
      */
     public Object handleUserAccess(Request request, Response response) {
         Users user = new Users(null, request.headers("userName"), request.headers("userName"), request.headers("hashedPassword"));
-        Users thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
+        Users thisUser = null;
+        try{
+            thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
+        }catch (Exception ex){
+            throw new InvalidUserNameException();
+        }
         if(checkPassword(user.getHashedPassword(), thisUser.getHashedPassword())){
             //thisUser.getHashedPassword().equals(createNewHashedPassword(user.getHashedPassword()))){
             Timestamp time = new Timestamp(System.currentTimeMillis());

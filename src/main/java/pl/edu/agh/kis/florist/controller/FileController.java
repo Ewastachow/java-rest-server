@@ -1,10 +1,10 @@
 package pl.edu.agh.kis.florist.controller;
 
-import com.sun.xml.internal.ws.api.streaming.XMLStreamWriterFactory;
+
 import org.jooq.Configuration;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DefaultConfiguration;
-import org.sqlite.SQLiteConfig;
+
 import pl.edu.agh.kis.florist.db.tables.daos.FileContentsDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FileMetadataDao;
 import pl.edu.agh.kis.florist.db.tables.daos.FolderMetadataDao;
@@ -22,7 +22,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
 import static java.time.temporal.WeekFields.ISO;
@@ -40,9 +40,9 @@ public class FileController {
 
     private Connection connection;
 
-    private FileMetadataDao fileMetadataDao;
-    private FolderMetadataDao folderMetadataDao;
-    private FileContentsDao fileContentsDao;
+    public FileMetadataDao fileMetadataDao;
+    public FolderMetadataDao folderMetadataDao;
+    public FileContentsDao fileContentsDao;
 
     /**
      * Controller no parameter constructor
@@ -535,7 +535,7 @@ public class FileController {
         }
     }
 
-    private List<FolderMetadata> getListOfAllFoldersInside(int folderId){
+    public List<FolderMetadata> getListOfAllFoldersInside(int folderId){
         List<FolderMetadata> list = new ArrayList<>();
         List<FolderMetadata> folders = new ArrayList<>();
         folders.addAll(folderMetadataDao.fetchByParentFolderId(folderId));

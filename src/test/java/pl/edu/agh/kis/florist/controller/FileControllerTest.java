@@ -5,8 +5,10 @@ import static pl.edu.agh.kis.florist.db.Tables.*;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import pl.edu.agh.kis.florist.db.tables.pojos.FolderMetadata;
 
 import static org.junit.Assert.*;
 
@@ -32,22 +34,22 @@ public class FileControllerTest {
 	}
 
     @Test
-	public void createAndLoadNewFolder() {
-	  //setup:
-//		Fo a = new Author("Michał","Bułchakow");
-//		AuthorsRecord rec = create.newRecord(AUTHORS,a);
-//		rec.store();
-//
-//		// when:
-//		List<Author> authors = new AuthorDAO().loadAllAuthors();
-//
-//	  //then:
-//		assertThat(authors).hasSize(1).extracting(Author::getFirstName).containsOnly("Michał");
+	public void createListOfFolders() {
+		FileController fileController = new FileController();
+
+		FolderMetadata folder = new FolderMetadata(1, "lama", "lama", "lama", null, null);
+
+		fileController.folderMetadataDao.insert(folder );
+		fileController.folderMetadataDao.insert( new FolderMetadata(2, "to", "lama/to", "lama/to", 1, null));
+
+		String string = "[[],[{'folderId':4,'name':'alpaka','pathLower':'aloes/alpaka',}]]";
+		assertFalse("",(fileController.getListOfAllFoldersInside(folder.getFolderId())).equals(string));
+
 	}
 
 	@Test
     public void createFolderList(){
-        FileController tested = new FileController();
+//        FileController tested = new FileController();
 //        tested.
     }
 
