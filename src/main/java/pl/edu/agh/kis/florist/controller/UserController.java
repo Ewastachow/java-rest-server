@@ -92,6 +92,26 @@ class UserController {
         return user;
     }
 
+    void accessAutorisation(Request request, Response response){
+        try{
+            String sessionId = request.cookie("session");
+            SessionData session = sessionDataDao.fetchBySessionId(sessionId).get(0);
+            Timestamp time = new Timestamp(System.currentTimeMillis());
+            Timestamp latestTime = new Timestamp(session.getLastAccessed().getTime()+60*1000);
+            if(time.before(latestTime)){
+                sessionDataDao.delete(session);
+                sessionDataDao.insert(new SessionData(session.getSessionId(), session.getUserId(), time));
+            }else {
+                sessionDataDao.delete(session);
+                response.status(401);
+                throw new AuthorizationException();
+            }
+        }catch(Exception e) {
+            response.status(401);
+            throw new AuthorizationException();
+        }
+    }
+
     private static String createNewHashedPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }

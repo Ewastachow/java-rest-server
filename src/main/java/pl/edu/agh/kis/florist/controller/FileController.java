@@ -31,7 +31,7 @@ import java.util.List;
  * Authorisation needed in cookies "session"
  * @author EwaStachow
  * @version v2.0
- * @exception/@throws InvalidPathException, AuthorizationException
+ * @exception/@throws InvalidPathException
  */
 class FileController {
 
@@ -42,7 +42,7 @@ class FileController {
     private FileMetadataDao fileMetadataDao;
     private FolderMetadataDao folderMetadataDao;
     private FileContentsDao fileContentsDao;
-    private SessionDataDao sessionDataDao;
+//    private SessionDataDao sessionDataDao;
 
     /**
      * Controller no parameter constructor
@@ -59,7 +59,7 @@ class FileController {
         fileMetadataDao = new FileMetadataDao(configuration);
         folderMetadataDao = new FolderMetadataDao(configuration);
         fileContentsDao = new FileContentsDao(configuration);
-        sessionDataDao = new SessionDataDao(configuration);
+//        sessionDataDao = new SessionDataDao(configuration);
 
     }
 
@@ -73,7 +73,7 @@ class FileController {
      */
     Object handleFolderContent(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
@@ -105,7 +105,7 @@ class FileController {
      */
     Object handleFolderData(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
@@ -131,7 +131,7 @@ class FileController {
      */
     Object handleDeleteFolder(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         try{
@@ -169,7 +169,7 @@ class FileController {
      */
     Object handleMoveFolder(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         Path newPath = Paths.get(request.queryParams("new_path"));
@@ -264,7 +264,7 @@ class FileController {
      */
     Object handleCreateFolder(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
@@ -320,7 +320,7 @@ class FileController {
      */
     Object handleUploadFile(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
@@ -377,7 +377,7 @@ class FileController {
      */
     Object handleRenameFolder(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
@@ -463,7 +463,7 @@ class FileController {
      */
     Object handleDownloadFile(Request request, Response response) {
 
-        accessAutorisation(request, response);
+//        accessAutorisation(request, response);
 
         Path path = Paths.get(request.params("path"));
         try{
@@ -497,23 +497,4 @@ class FileController {
         return list;
     }
 
-    private void accessAutorisation(Request request, Response response){
-        try{
-            String sessionId = request.cookie("session");
-            SessionData session = sessionDataDao.fetchBySessionId(sessionId).get(0);
-            Timestamp time = new Timestamp(System.currentTimeMillis());
-            Timestamp latestTime = new Timestamp(session.getLastAccessed().getTime()+60*1000);
-            if(time.before(latestTime)){
-                sessionDataDao.delete(session);
-                sessionDataDao.insert(new SessionData(session.getSessionId(), session.getUserId(), time));
-            }else {
-                sessionDataDao.delete(session);
-                response.status(401);
-                throw new AuthorizationException();
-            }
-        }catch(Exception e) {
-            response.status(401);
-            throw new AuthorizationException();
-        }
-    }
 }

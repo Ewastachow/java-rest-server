@@ -21,6 +21,11 @@ import pl.edu.agh.kis.florist.model.ParameterFormatError;
 import spark.Request;
 import spark.ResponseTransformer;
 
+/**
+ * Main Server
+ * @author EwaStachow
+ * @version v2.0
+ */
 public class App {
 
 	final static private Logger LOGGER = LoggerFactory.getILoggerFactory().getLogger("requests");
@@ -47,11 +52,9 @@ public class App {
 
 		port(4567);
 
-		//registers filter before processing of any request with special metothod stated below
-		//this method is run to log request with logger
-		//but similar method can be used to check user authorisation
-		before("/*/", (req, res) -> {
+		before("/files/*", (req, res) -> {
 			info(req);
+			userController.accessAutorisation(req, res);
 		});
 
 
@@ -70,7 +73,6 @@ public class App {
         post(FILE_UPLOAD_PATH, "multipart/form-data", fileController::handleUploadFile, json);
 
 		get(FILE_DOWNLOAD_PATH, fileController::handleDownloadFile, json);
-
 
 		post(USER_CREATE_PATH, "multipart/form-data", userController::handleCreateNewUser, json);
 
