@@ -22,9 +22,9 @@ import java.sql.Timestamp;
  * Class controling using database for users
  * @author EwaStachow
  * @version v2.0
- * @exception/@throws InvalidUserNameException, AuthorizationException
+ * //@exception/@throws InvalidUserNameException, AuthorizationException
  */
-class UserController {
+public class UserController {
 
     private static final int CREATED = 201;
 
@@ -53,11 +53,11 @@ class UserController {
 
     /**
      * Method checking rights to access and seting it
-     * @param request REST obtained request - needed headers "userName" & "hashedPassword"
-     * @param response REST regived response status 200 & cookie "session
-     * @return String -> authorisation session id
+     * @param request REST obtained request - needed headers "userName" and "hashedPassword"
+     * @param response REST regived response status 200 and cookie "session
+     * @return String - authorisation session id
      */
-    Object handleUserAccess(Request request, Response response) {
+    public Object handleUserAccess(Request request, Response response) {
         Users user = new Users(null, request.headers("userName"), request.headers("userName"), request.headers("hashedPassword"));
         Users thisUser = usersDao.fetchByUserName(user.getUserName()).get(0);
         if(checkPassword(user.getHashedPassword(), thisUser.getHashedPassword())){
@@ -84,7 +84,7 @@ class UserController {
      * @param response REST regived response
      * @return Users object
      */
-    Object handleCreateNewUser(Request request, Response response) {
+    public Object handleCreateNewUser(Request request, Response response) {
         Users users = gson.fromJson(request.body(), Users.class);
         Users user = new Users(null,users.getUserName(),users.getUserName(),createNewHashedPassword(users.getHashedPassword()));
         usersDao.insert(user);

@@ -24,13 +24,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Class controling using database for Files & Folders
+ * Class controling using database for Files and Folders
  * Authorisation needed in cookies "session"
  * @author EwaStachow
  * @version v2.0
- * @exception/@throws InvalidPathException
+ * //@throws InvalidPathException
  */
-class FileController {
+public class FileController {
 
     private static final int CREATED = 201;
 
@@ -60,13 +60,13 @@ class FileController {
 
     /**
      * Method returning List of Files and Folders inside Folder selected by path
-     * recursive = true => all folders&files containing path in their path
-     * recursive = false => only children
-     * @param request REST obtained request - needed param "path" & query "recursive"
+     * recursive = true - all folders and files containing path in their path
+     * recursive = false - only children
+     * @param request REST obtained request - needed param "path" and query "recursive"
      * @param response REST regived response
-     * @return List of FileMetadata & FoderMetadata
+     * @return List of FileMetadata and FoderMetadata
      */
-    Object handleFolderContent(Request request, Response response) {
+    public Object handleFolderContent(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         List<FileMetadata> files = new ArrayList<>();
@@ -96,7 +96,7 @@ class FileController {
      * @param response REST regived response
      * @return FolderMetadata or FileMetadata object
      */
-    Object handleFolderData(Request request, Response response) {
+    public Object handleFolderData(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         FolderMetadata result = null;
@@ -120,7 +120,7 @@ class FileController {
      * @param response REST regived response
      * @return FolderMetadata or FileMetadata object
      */
-    Object handleDeleteFolder(Request request, Response response) {
+    public Object handleDeleteFolder(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         try{
@@ -152,11 +152,11 @@ class FileController {
 
     /**
      * Method changing location of given path to given new_path
-     * @param request REST obtained request - needed param "path" & query "new_path
+     * @param request REST obtained request - needed param "path" and query "new_path
      * @param response REST regived response
      * @return FolderMetadata or FileMetadata object
      */
-    Object handleMoveFolder(Request request, Response response) {
+    public Object handleMoveFolder(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         Path newPath = Paths.get(request.queryParams("new_path"));
@@ -164,9 +164,10 @@ class FileController {
 
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
+            FolderMetadata newParent = null;
 
             try{
-                FolderMetadata tested = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
+                newParent = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
             }catch(Exception e){
                 throw new InvalidPathException(path.toString());
             }
@@ -183,7 +184,7 @@ class FileController {
 
             folderMetadataDao.delete(folder);
             FolderMetadata newFolder = new FolderMetadata(folder.getFolderId(), folder.getName(),
-                    newPath.toString()+"/"+folder.getName(), newPath.toString()+"/"+folder.getName(), folder.getParentFolderId(), folder.getServerCreatedAt());
+                    newPath.toString()+"/"+folder.getName(), newPath.toString()+"/"+folder.getName(), newParent.getFolderId(), folder.getServerCreatedAt());
             folderMetadataDao.insert(newFolder);
 
             for(FolderMetadata i: folders){
@@ -211,11 +212,12 @@ class FileController {
         }catch(Exception e){ //// TODO: 27.01.17 Test moving files & folders
             try{
                 FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+                FolderMetadata newParent = null;
 
                 String newPathString = newPath.toString()+"/"+file.getName();
 
                 try{
-                    FolderMetadata tested = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
+                    newParent = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
                 }catch(Exception ex){
                     throw new InvalidPathException(path.toString());
                 }
@@ -230,7 +232,7 @@ class FileController {
 
                 Timestamp time = new Timestamp(System.currentTimeMillis());
                 FileMetadata newFile = new FileMetadata(file.getFileId(), file.getName(), newPathString,
-                        newPathString, file.getSize(), file.getServerCreatedAt(), time, file.getEnclosingFolderId());
+                        newPathString, file.getSize(), file.getServerCreatedAt(), time, newParent.getFolderId());
 
                 fileMetadataDao.insert(newFile);
                 response.status(CREATED);
@@ -249,7 +251,7 @@ class FileController {
      * @param response REST regived response
      * @return FolderMetadata object
      */
-    Object handleCreateFolder(Request request, Response response) {
+    public Object handleCreateFolder(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         FolderMetadata parent;
@@ -299,11 +301,11 @@ class FileController {
 
     /**
      * Method uploading file on server to given location
-     * @param request REST obtained request - needed param "path" & body with file source
+     * @param request REST obtained request - needed param "path" and body with file source
      * @param response REST regived response
      * @return FileMetadata object
      */
-    Object handleUploadFile(Request request, Response response) {
+    public Object handleUploadFile(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         String content = request.body();    //// TODO: 25.01.17 Chyba zawartość pliku jest źle czytana
@@ -354,11 +356,11 @@ class FileController {
 
     /**
      * Method changing the name of given path
-     * @param request REST obtained request - needed param "path" & query "new_name
+     * @param request REST obtained request - needed param "path" and query "new_name
      * @param response REST regived response
      * @return FolderMetadata or FileMetadata object
      */
-    Object handleRenameFolder(Request request, Response response) {
+    public Object handleRenameFolder(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         String newName = request.queryParams("new_name");
@@ -438,11 +440,11 @@ class FileController {
 
     /**
      * Method allowing to download file content
-     * @param request REST obtained request - needed param "path" & query "new_name
+     * @param request REST obtained request - needed param "path" and query "new_name
      * @param response REST regived response
      * @return Content of object
      */
-    Object handleDownloadFile(Request request, Response response) {
+    public Object handleDownloadFile(Request request, Response response) {
 
         Path path = Paths.get(request.params("path"));
         try{
