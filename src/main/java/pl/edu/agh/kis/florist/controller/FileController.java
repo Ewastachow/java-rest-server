@@ -41,6 +41,10 @@ class FileController {
     private FileContentsDao fileContentsDao;
     private SessionDataDao sessionDataDao;
 
+    /**
+     * FileController no parameter constructor
+     * It's setting needed daos with configuration
+     */
     FileController() {
         try {
             String DB_URL = "jdbc:sqlite:test.db";
@@ -56,6 +60,14 @@ class FileController {
 
     }
 
+    /**
+     * Method returning List of Files and Folders inside Folder selected by path
+     * recursive = true => all folders&files containing path in their path
+     * recursive = false => only children
+     * @param request REST obtained request - needed param "path" & query "recursive"
+     * @param response REST regived response
+     * @return List of FileMetadata & FoderMetadata
+     */
     Object handleFolderContent(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -82,6 +94,12 @@ class FileController {
         return result;
     }
 
+    /**
+     * Method returning all information about file/folder of given path
+     * @param request REST obtained request - needed param "path"
+     * @param response REST regived response
+     * @return FolderMetadata or FileMetadata object
+     */
     Object handleFolderData(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -102,6 +120,12 @@ class FileController {
         }
     }
 
+    /**
+     * Method deleting file/folder of given path
+     * @param request REST obtained request - needed param "path"
+     * @param response REST regived response
+     * @return FolderMetadata or FileMetadata object
+     */
     Object handleDeleteFolder(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -134,6 +158,12 @@ class FileController {
         }
     }
 
+    /**
+     * Method changing location of given path to given new_path
+     * @param request REST obtained request - needed param "path" & query "new_path
+     * @param response REST regived response
+     * @return FolderMetadata or FileMetadata object
+     */
     Object handleMoveFolder(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -145,6 +175,11 @@ class FileController {
         try{
             FolderMetadata folder = folderMetadataDao.fetchByPathLower(path.toString()).get(0);
 
+            try{
+                FolderMetadata tested = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
+            }catch(Exception e){
+                throw new InvalidPathException(path.toString());
+            }
             FolderMetadata tested2 = null;
             try{
                 tested2 = folderMetadataDao.fetchByPathLower(newPath.toString()+"/"+folder.getName()).get(0);
@@ -183,12 +218,47 @@ class FileController {
             }
             return newFolder;
 
-        }catch(Exception e){
-            response.status(405);
-            throw new InvalidPathException(path.toString());
+        }catch(Exception e){ //// TODO: 27.01.17 Test moving files & folders
+            try{
+                FileMetadata file = fileMetadataDao.fetchByPathLower(path.toString()).get(0);
+
+                String newPathString = newPath.toString()+"/"+file.getName();
+
+                try{
+                    FolderMetadata tested = folderMetadataDao.fetchByPathLower(newPath.toString()).get(0);
+                }catch(Exception ex){
+                    throw new InvalidPathException(path.toString());
+                }
+                FileMetadata tested2 = null;
+                try{
+                    tested2 = fileMetadataDao.fetchByPathLower(newPathString).get(0);
+                }catch(Exception ex){
+                }
+                if(tested2!=null) throw new InvalidPathException(path.toString());
+
+                fileMetadataDao.delete(file);
+
+                Timestamp time = new Timestamp(System.currentTimeMillis());
+                FileMetadata newFile = new FileMetadata(file.getFileId(), file.getName(), newPathString,
+                        newPathString, file.getSize(), file.getServerCreatedAt(), time, file.getEnclosingFolderId());
+
+                fileMetadataDao.insert(newFile);
+                response.status(CREATED);
+                return newFile;
+
+            }catch (Exception ex){
+                response.status(405);
+                throw new InvalidPathException(path.toString());
+            }
         }
     }
 
+    /**
+     * Method creating folder of given path
+     * @param request REST obtained request - needed param "path"
+     * @param response REST regived response
+     * @return FolderMetadata object
+     */
     Object handleCreateFolder(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -239,6 +309,12 @@ class FileController {
         }
     }
 
+    /**
+     * Method uploading file on server to given location
+     * @param request REST obtained request - needed param "path" & body with file source
+     * @param response REST regived response
+     * @return FileMetadata object
+     */
     Object handleUploadFile(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -290,6 +366,12 @@ class FileController {
         return result;
     }
 
+    /**
+     * Method changing the name of given path
+     * @param request REST obtained request - needed param "path" & query "new_name
+     * @param response REST regived response
+     * @return FolderMetadata or FileMetadata object
+     */
     Object handleRenameFolder(Request request, Response response) {
 
         accessAutorisation(request, response);
@@ -370,6 +452,12 @@ class FileController {
         }
     }
 
+    /**
+     * Method allowing to download file content
+     * @param request REST obtained request - needed param "path" & query "new_name
+     * @param response REST regived response
+     * @return Content of object
+     */
     Object handleDownloadFile(Request request, Response response) {
 
         accessAutorisation(request, response);
